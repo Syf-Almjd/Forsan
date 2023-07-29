@@ -1,0 +1,48 @@
+name: forsan
+description: A Printing Service APP.
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.5
+  hexcolor: ^3.0.1
+  cloud_firestore: ^4.8.3
+  firebase_auth: ^4.7.1
+  firebase_core: ^2.15.0
+  flutter_bloc: ^8.1.3
+  google_fonts: ^5.1.0
+  firebase_storage: ^11.2.5
+  loading_animation_widget: ^1.2.0+4
+  animated_bottom_navigation_bar: ^1.2.0
+#  awesome_snackbar_content: ^0.1.3
+#  shared_preferences: ^2.2.0
+#  flutter_icon_snackbar: ^1.1.4
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: "^0.12.0"
+  flutter_lints: ^2.0.1
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/forsan_logo.jpeg"
+
+flutter:
+  uses-material-design: true
+
+
+
+  assets:
+    - assets/forsan_logo.jpeg
+    - assets/me.jpeg
+    - assets/printNow.gif
+

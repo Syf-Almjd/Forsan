@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "273016929002",
+    "project_id": "forsanprinting",
+    "storage_bucket": "forsanprinting.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273016929002:android:aecaf79db199d6aebeb593",
+        "android_client_info": {
+          "package_name": "com.mjd.forsan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273016929002-7vnfubl36aka5m2qo3vpa050gs25j3hg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-u22ySWjG8iNeujwFlfeHPUHOiZy2oKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273016929002-7vnfubl36aka5m2qo3vpa050gs25j3hg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "273016929002-d26qk1tfqm6g8abejkf2t5ffhltkl4mf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.forsanPrinting"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273016929002:android:c7d6556fbead4b00beb593",
+        "android_client_info": {
+          "package_name": "com.mjd.forsan.forsan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273016929002-7vnfubl36aka5m2qo3vpa050gs25j3hg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-u22ySWjG8iNeujwFlfeHPUHOiZy2oKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273016929002-7vnfubl36aka5m2qo3vpa050gs25j3hg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "273016929002-d26qk1tfqm6g8abejkf2t5ffhltkl4mf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.forsanPrinting"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
