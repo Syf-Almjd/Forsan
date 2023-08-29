@@ -30,4 +30,8 @@ class StartClick extends AppStates {}
 
 class StopClick extends AppStates {}
 
+class SelectIt extends AppStates {}
+
+class UnSelectIt extends AppStates {}
+
 //add abstract and check what happenns

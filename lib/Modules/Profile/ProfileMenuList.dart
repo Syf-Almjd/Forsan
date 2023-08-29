@@ -16,7 +16,6 @@ class ProfileMenuWidget extends StatelessWidget {
   final VoidCallback onPress;
   final bool endIcon;
   final Color? textColor;
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -34,7 +33,7 @@ class ProfileMenuWidget extends StatelessWidget {
           : null,
       title: Align(
           alignment: Alignment.centerRight,
-          child: Text(title, style: fontAlmarai())),
+          child: Text(title)),
       trailing: Container(
         width: 40,
         height: 40,

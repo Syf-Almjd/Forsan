@@ -3,7 +3,8 @@ class Assets {
   Assets._();
 
   static const String assetsForsanLogo = 'assets/forsan_logo.jpeg';
-  static const String assetsMe = 'assets/me.jpeg';
-  static const String assetsPrintNow = 'assets/printNow.gif';
+  static const String assetsHomebg = 'assets/homebg.jpg';
+  static const String assetsPrint = 'assets/print.gif';
+  static const String assetsProfilePicture = 'assets/profilePicture.jpg';
 
 }

@@ -1,5 +1,4 @@
 List<String> studentServicesList = [
-  "طباعة مستندات",
   "التغليف الحراري",
   "تصميم السيرة الذاتية",
   "استخراج بحوث",
@@ -67,12 +66,18 @@ List<String> moreServiceImge = [
   'https://plus.unsplash.com/premium_photo-1684407617014-711a4eebe612?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
 ];
 
-List<String> socialMediaList = [
-  "https://upload.wikimedia.org/wikipedia/en/thumb/0/04/Facebook_f_logo_%282021%29.svg/1200px-Facebook_f_logo_%282021%29.svg.png",
-  "https://i0.wp.com/aimanpsikologi.com/wp-content/uploads/2018/01/instagram-colourful-icon.png?ssl=1",
-  "https://cdn-icons-png.flaticon.com/512/124/124034.png?w=360",
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/800px-Telegram_2019_Logo.svg.png",
-];
+Map<String, String> socialMediaList = {
+  "https://upload.wikimedia.org/wikipedia/en/thumb/0/04/Facebook_f_logo_%282021%29.svg/1200px-Facebook_f_logo_%282021%29.svg.png":
+      "",
+  "https://i0.wp.com/aimanpsikologi.com/wp-content/uploads/2018/01/instagram-colourful-icon.png?ssl=1":
+      "",
+  "https://cdn-icons-png.flaticon.com/512/124/124034.png?w=360": "https://wa.me/+96651236432",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/800px-Telegram_2019_Logo.svg.png":
+      "https://t.me/+96651236432",
+  "https://static-00.iconduck.com/assets.00/gmail-icon-512x511-fih5xfbp.png":
+      "mailto:forsan.print@gmail.com",
+  "https://media.tenor.com/zVNzIFTdYIEAAAAC/call.gif": "tel:+96651236432",
+};
 
 List<String> serviceNames = [
   "الطباعة",
@@ -113,9 +118,9 @@ List<String> serviceImgsFB = [
 
 List<String> ProductListType = [
   "الجديد",
-  "القديم",
   "الاكتر مبيع",
   "التخفيضات",
   "خدمات",
+  "القديم",
   "اقلام",
 ];

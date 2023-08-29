@@ -3,10 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forsan/API/Data/inAppData.dart';
+import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
+import 'package:forsan/Modules/Cart/CartPage.dart';
+import 'package:forsan/Modules/HomeScreen/Screens/PrintNowPage.dart';
 import 'package:forsan/Modules/Product/ItemTypeList.dart';
 
 import '../../Components/Components.dart';
 import '../../Cubit/AppDataCubit/app_cubit.dart';
+import '../../Cubit/BaB BloC/ba_b_bloc.dart';
 import '../../Models/ProductModel.dart';
 import 'ItemsList.dart';
 
@@ -28,25 +32,29 @@ class _productsPageState extends State<productsPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Spacer(),
-              Column(
-                children: [
-                  const Icon(
-                    Icons.shopping_bag_outlined,
-                    size: 30,
-                    color: Colors.green,
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    "السلة",
-                    style: fontAlmarai(size: 10, textColor: Colors.green),
-                  ),
-                ],
+              const Spacer(),
+              InkWell(
+                onTap: (){ BlocProvider.of<BaBBloc>(context)
+                    .add(TabChange(1));},
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.shopping_bag_outlined,
+                      size: 30,
+                      color: Colors.green,
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "السلة",
+                      style: fontAlmarai(size: 10, textColor: Colors.green),
+                    ),
+                  ],
+                ),
               ),
-              Spacer(),
+              const Spacer(),
               Container(
                 height: getHeight(10, context),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.circular(30)),
                   color: Colors.amberAccent,
@@ -60,27 +68,30 @@ class _productsPageState extends State<productsPage> {
                   ),
                 ),
               ),
-              Spacer(),
-              Column(
-                children: [
-                  const Icon(
-                    Icons.favorite,
-                    size: 30,
-                    color: Colors.redAccent,
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    "المفضّل",
-                    style: fontAlmarai(size: 10, textColor: Colors.red),
-                  ),
-                ],
+              const Spacer(),
+              InkWell(
+                onTap: (){NaviCubit.get(context).navigate(context, const printNowPage("الطباعة"));},
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.print_outlined,
+                      size: 30,
+                      color: Colors.blue,
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "اطبع",
+                      style: fontAlmarai(size: 10, textColor: Colors.blue),
+                    ),
+                  ],
+                ),
               ),
-              Spacer(),
+              const Spacer(),
             ],
           ),
           getCube(2, context),
           SizedBox(
-            height: getHeight(5, context), //hight for overall container
+            height: getHeight(5, context), //height for overall container
             child: ListView.builder(
               physics: const BouncingScrollPhysics(),
               itemCount: ProductListType.length,
@@ -103,10 +114,12 @@ class _productsPageState extends State<productsPage> {
 
                 if (snapshot.hasError || !snapshot.hasData) {
                   return const Center(
-                    child: Text("Error fetching data"),
+                    child: Text(
+                      "لا يوجد منتجات",
+                      
+                    ),
                   );
                 }
-                FirebaseAuth.instance.signInAnonymously();
                 List<ProductModel> ListProducts =
                     appDataState.getDataJson(snapshot);
                 return GridView.builder(
@@ -116,8 +129,7 @@ class _productsPageState extends State<productsPage> {
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 80,
                     ),
-                    itemCount: 3,
-                    //ListProducts.length
+                    itemCount: ListProducts.length,
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {

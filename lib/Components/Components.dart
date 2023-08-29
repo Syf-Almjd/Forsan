@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 TextStyle fontAlmarai(
     {double? size, Color? textColor, FontWeight? fontWeight}) {
@@ -55,7 +57,8 @@ Widget textFieldA({
   required String hintText,
   bool? obscureText = false, //optional
   TextAlign textAlign = TextAlign.start, //optional
-  required Icon prefixIcon,
+  Icon? prefixIcon,
+  double? internalPadding,
   void Function(String)? onChanged,
   void Function(String)? onSubmitted,
 }) {
@@ -68,7 +71,7 @@ Widget textFieldA({
     decoration: InputDecoration(
       hintText: hintText,
       fillColor: HexColor("#f2f3ff"),
-      contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+      contentPadding: EdgeInsets.all(internalPadding ?? 20),
       hintStyle: GoogleFonts.almarai(
         fontSize: 15,
         color: Colors.black87,
@@ -192,57 +195,60 @@ Widget itemsList({
 Widget rowHomeItems({
   required String name,
   required String img,
+  required Function onTap,
+
 }) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.white70,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: SizedBox(
-                height: 100,
-                width: 150,
-                child: Card(
-                  elevation: 10.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.network(
-                      img,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        return loadingProgress != null
-                            ? Center(
-                                child: LoadingAnimationWidget.flickr(
-                                    leftDotColor: Colors.blue,
-                                    rightDotColor: Colors.yellow,
-                                    size: 30))
-                            : child;
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return const SizedBox.shrink();
-                      },
+  return InkWell(
+    onTap: (){onTap(name);},
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white70,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: 100,
+                  width: 150,
+                  child: Card(
+                    elevation: 10.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.network(
+                        img,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          return loadingProgress != null
+                              ? Center(
+                                  child: LoadingAnimationWidget.flickr(
+                                      leftDotColor: Colors.blue,
+                                      rightDotColor: Colors.yellow,
+                                      size: 30))
+                              : child;
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return const SizedBox.shrink();
+                        },
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              name,
-              style:
-                  fontAlmarai(), // You should define fontArabicA() elsewhere.
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                name
+              ),
+            ],
+          ),
         ),
       ),
     ),
@@ -250,37 +256,105 @@ Widget rowHomeItems({
 }
 
 Widget socialMediaItem({
+  required int index,
   required String img,
   required Function onTap,
 }) {
+
   return Padding(
     padding: const EdgeInsets.all(7.0),
-    child: SizedBox(
-      height: 50,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(50),
-        child: Image.network(
-          img,
-          fit: BoxFit.contain,
-          loadingBuilder: (context, child, loadingProgress) {
-            return loadingProgress != null
-                ? Center(
-                    child: LoadingAnimationWidget.flickr(
-                        leftDotColor: Colors.blue,
-                        rightDotColor: Colors.yellow,
-                        size: 30))
-                : child;
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return const SizedBox.shrink();
-          },
+    child: InkWell(
+      onTap: (){onTap(index);},
+      child: SizedBox(
+        height: 50,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Image.network(
+            img,
+            fit: BoxFit.contain,
+            loadingBuilder: (context, child, loadingProgress) {
+              return loadingProgress != null
+                  ? Center(
+                      child: LoadingAnimationWidget.flickr(
+                          leftDotColor: Colors.blue,
+                          rightDotColor: Colors.yellow,
+                          size: 30))
+                  : child;
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return const SizedBox.shrink();
+            },
+          ),
         ),
       ),
     ),
   );
 }
 
+
+void openUrl(String url) {
+  var openUrl =  Uri.parse(url);
+  launchUrl(
+    openUrl,
+    mode: LaunchMode.externalApplication,
+  );
+}
+enum asd {
+  save,
+  fail,
+  alert,
+}
+
+void showToast(String text, SnackBarType type, context) => IconSnackBar.show(
+  context: context,
+  snackBarType: type,
+  label: text,
+);
+
+void showToast2(String text, asd, context) => IconSnackBar.show(
+  context: context,
+  snackBarType: asd as SnackBarType,
+  label: text,
+);
+
+
 //OTHER
+
+// biometricLogin(context, attempts) {
+//   return InkWell(
+//     focusColor: Colors.transparent,
+//     hoverColor: Colors.transparent,
+//     splashColor: Colors.transparent,
+//     onTap: () async {
+//       var userData = await AppCubit.get(context).getUserData();
+//       var savedID = await getSharedData("userID");
+//       // var isVerified = await AppCubit.get(context).getBioAuthentication();
+//       if (savedID == userData.userID && attempts <= 3) {
+//         showToast("Successful!", SnackBarType.save, context);
+//       } else {
+//         NaviCubit.get(context).navigateToBiometricLogin(context);
+//         showToast(
+//           "Unsuccessful, try again",
+//           SnackBarType.fail,
+//           context,
+//         );
+//       }
+//     },
+//     child: (Platform.isIOS)
+//         ? Icon(
+//             Icons.face_outlined,
+//             size: getWidth(35, context),
+//             color: Colors.grey,
+//           )
+//         : Icon(
+//             Icons.fingerprint_outlined,
+//             size: getWidth(35, context),
+//             color: Colors.grey,
+//           ),
+//   );
+// }
+
+
 
 // Widget buildProductDetails({String? name, String? img}) {
 //   return Card(

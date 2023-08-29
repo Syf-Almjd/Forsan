@@ -49,7 +49,7 @@ class ProductCardView extends StatelessWidget {
                             }
                           },
                           errorBuilder: (context, error, stackTrace) => Text(
-                            "Sorry.. Photo unavailable $error",
+                            "خطا $error",
                             style: TextStyle(fontSize: 10),
                           ),
                           alignment: imageAlignment,
