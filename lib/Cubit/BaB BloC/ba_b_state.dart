@@ -28,3 +28,32 @@ class ProfileScreen extends BaBState {
 }
 
 // class CurrentIndex extends BaBState {}
+
+
+//Registration Page
+
+@immutable
+abstract class RegisterPagesState {
+  final int defaultIndex;
+  const RegisterPagesState(this.defaultIndex);
+}
+
+class RegisterPagesInitial extends RegisterPagesState {
+  const RegisterPagesInitial(super.defaultIndex);
+}
+
+class LoginScreen extends RegisterPagesState {
+  const LoginScreen(super.defaultIndex);
+}
+
+class RegisterScreenOne extends RegisterPagesState {
+  const RegisterScreenOne(super.defaultIndex);
+}
+
+class RegisterScreenTwo extends RegisterPagesState {
+  const RegisterScreenTwo(super.defaultIndex);
+}
+
+class RegisterScreenThree extends RegisterPagesState {
+  const RegisterScreenThree(super.defaultIndex);
+}

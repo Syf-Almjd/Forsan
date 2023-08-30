@@ -23,3 +23,21 @@ class BaBBloc extends Bloc<BaBEvent, BaBState> {
     });
   }
 }
+class RegisterBabBloc extends Bloc<BaBEvent, RegisterPagesState> {
+  RegisterBabBloc() : super(const RegisterPagesInitial(0)) {
+    on<BaBEvent>((event, emit) {
+      if (event is TabChange) {
+        switch (event.currentIndex) {
+          case (0):
+            emit(LoginScreen(event.currentIndex));
+          case (1):
+            emit(RegisterScreenOne(event.currentIndex));
+          case (2):
+            emit(RegisterScreenTwo(event.currentIndex));
+          case (3):
+            emit(RegisterScreenThree(event.currentIndex));
+        }
+      }
+    });
+  }
+}

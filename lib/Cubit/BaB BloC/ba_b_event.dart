@@ -8,3 +8,12 @@ class TabChange extends BaBEvent {
 
   TabChange(this.currentIndex);
 }
+
+@immutable
+abstract class RegisterTabEvent {}
+
+class RegisterTabChange extends RegisterTabEvent {
+  final int currentIndex;
+
+  RegisterTabChange(this.currentIndex);
+}

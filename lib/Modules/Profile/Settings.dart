@@ -209,7 +209,6 @@ class _settingsPageState extends State<settingsPage> {
                                   context: context,
                                   snackBarType: SnackBarType.fail,
                                   label: '!اعد المحاولة');
-                              AppCubit.get(context).stopLoading();
                             }
                             userData = UserModel(
                                 email: email.text,

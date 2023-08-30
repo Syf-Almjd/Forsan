@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:forsan/generated/assets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../Cubit/AppDataCubit/app_cubit.dart';
 
 TextStyle fontAlmarai(
     {double? size, Color? textColor, FontWeight? fontWeight}) {
@@ -291,6 +295,75 @@ Widget socialMediaItem({
   );
 }
 
+Widget loadButton({
+  required Function() onPressed,
+  required String buttonText,
+}) {
+  return BlocBuilder<AppCubit, AppStates>(builder: (context, state) {
+    if (state is GettingData) {
+      return loadingAnimation(
+          loadingType: LoadingAnimationWidget.stretchedDots(
+              color: Colors.yellowAccent, size: getWidth(15, context)));
+    } else {
+      return Container(
+        width: getWidth(80, context),
+        height: 60.0,
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            elevation: 10,
+          ),
+          onPressed: onPressed,
+          child: Text(
+            buttonText,
+            style: TextStyle(
+                fontSize: getWidth(10, context), color: Colors.white),
+          ),
+        ),
+      );
+    }
+  });
+}
+
+//Show a toast
+void showToast(String text, SnackBarType type, context) => IconSnackBar.show(
+  context: context,
+  snackBarType: type,
+  label: text,
+);
+
+//Validate Text field
+validateForm(
+    GlobalKey<FormState> validateKey,
+    ) {
+  if (validateKey.currentState!.validate()) {
+    validateKey.currentState!.save();
+    return true;
+  } else {
+    return false;
+  }
+}
+///shows logo
+Padding logoContainer(context) {
+  return Padding(
+    padding: const EdgeInsets.all(50.0),
+    child: Container(
+      width: getWidth(50, context),
+      height: getHeight(20, context),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(width: 2),
+      ),
+      child: const Image(
+        image: AssetImage(Assets.assetsForsanLogo),
+        fit: BoxFit.contain,
+      ),
+    ),
+  );
+}
 
 void openUrl(String url) {
   var openUrl =  Uri.parse(url);
@@ -305,11 +378,35 @@ enum asd {
   alert,
 }
 
-void showToast(String text, SnackBarType type, context) => IconSnackBar.show(
-  context: context,
-  snackBarType: type,
-  label: text,
-);
+
+///For photo selection
+Widget chooseFile(context) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Expanded(
+        child: Icon(
+          Icons.person,
+          size: getHeight(10, context),
+          color: Colors.blueGrey.shade300,
+        ),
+      ),
+    ],
+  );
+}
+
+///For photo preview
+Widget fileChosen(fileUser, context) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Image.memory(fileUser),
+    ],
+  );
+}
+
 
 void showToast2(String text, asd, context) => IconSnackBar.show(
   context: context,

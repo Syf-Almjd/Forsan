@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forsan/Cubit/BaB%20BloC/ba_b_bloc.dart';
 import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
-import 'package:forsan/Modules/Authentication/LoginUser.dart';
+import 'package:forsan/Modules/Authentication/Login/LoginUser.dart';
 import 'package:forsan/Modules/Cart/CartPage.dart';
 import 'package:forsan/Modules/Product/ProductsPage.dart';
 import 'package:forsan/Modules/Profile/Profile.dart';
@@ -12,6 +12,7 @@ import 'package:introduction_screen/introduction_screen.dart';
 
 import '../API/Data/BabData.dart';
 import '../Components/Components.dart';
+import 'Authentication/SignLayout.dart';
 import 'HomeScreen/HomePage.dart';
 
 class HomeMain extends StatelessWidget {
@@ -80,10 +81,10 @@ class HomeMain extends StatelessWidget {
                 next:  Text("التالي", style:fontAlmarai(textColor: Colors.amberAccent),),
                 done: const Icon(Icons.not_started_outlined,size: 50,),
                 onDone: () {
-                  NaviCubit.get(context).navigate(context, const login());
+                  NaviCubit.get(context).navigate(context, const SignLayout());
                 },
                 onSkip: () {
-                  NaviCubit.get(context).navigate(context, const login());
+                  NaviCubit.get(context).navigate(context, const SignLayout());
                 },
 
                 dotsDecorator: DotsDecorator(

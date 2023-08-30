@@ -132,6 +132,7 @@ class otherServicesState extends State<otherServices> {
                                       orderFile: "",
                                       orderTitle: widget.title,
                                       orderPrice: "",
+                                      orderStatus: "قيد المعالجة",
                                       orderColor: "service",
                                       orderSize: "service",
                                       orderPadding: "service",

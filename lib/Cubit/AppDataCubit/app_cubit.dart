@@ -18,31 +18,6 @@ class AppCubit extends Cubit<AppStates> {
 
   static AppCubit get(context) => BlocProvider.of(context);
 
-  var userID = FirebaseAuth.instance.currentUser?.uid;
-
-  // Loading loading = Loading(isLoading: false);
-  // DidGetDataSuccessful GotIt = DidGetDataSuccessful(GotData: false);
-
-  // int currentIndex => CurrentIndex.getCurrentIndex;
-
-  void startLoading() => emit(StartLoadingState());
-
-  void stopLoading() => emit(StopLoadingState());
-
-  void startClick() => emit(StartClick());
-
-  void stopClick() => emit(StopClick());
-
-  void selectIt() => emit(SelectIt());
-
-  void unSelectIt() => emit(UnSelectIt());
-
-  bool isSelected(state) => state is SelectIt ? true : false;
-
-  bool isLoading(state) => state is StartLoadingState ? true : false;
-
-  void setUserData() => getUserData();
-
   //not sure about above method
   List<String> firebaseDocIDs(snapshot) {
     List<String> dataList = [];
@@ -83,7 +58,7 @@ class AppCubit extends Cubit<AppStates> {
   Future<void> uploadUserOrders(OrderModel order, context) async {
     try {
       emit(GettingData());
-      FirebaseFirestore.instance.collection('orders').doc(userID).collection('userOrders').doc(order.orderId).set(order.toJson());
+      FirebaseFirestore.instance.collection('orders').doc(FirebaseAuth.instance.currentUser?.uid).collection('userOrders').doc(order.orderId).set(order.toJson());
       IconSnackBar.show(
           context: context,
           snackBarType: SnackBarType.save,
@@ -102,7 +77,7 @@ class AppCubit extends Cubit<AppStates> {
     emit(GettingData());
     List<OrderModel> orderDataList =[];
 
-    var collection =  await FirebaseFirestore.instance.collection("orders").doc(userID).collection('userOrders').get();
+    var collection =  await FirebaseFirestore.instance.collection("orders").doc(FirebaseAuth.instance.currentUser?.uid).collection('userOrders').get();
     for (var doc in collection.docs) {
       orderDataList.add(OrderModel.fromJson(doc.data()));
     }
@@ -110,33 +85,44 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetDataSuccessful());
       return orderDataList;
     } else {
+      emit(GetDataError());
       return orderDataList;
     }
   }
   Future<UserModel> getUserData() async {
     emit(GettingData());
-    DocumentSnapshot userSnapshot =
-    await FirebaseFirestore.instance.collection("users").doc(userID).get();
-    if (userSnapshot.exists) {
-      emit(GetDataSuccessful());
-      return UserModel.fromJson(userSnapshot.data() as Map<String, dynamic>);
-    } else {
+
+    try {
+      final userSnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      if (userSnapshot.exists) {
+        final userData = UserModel.fromJson(userSnapshot.data()!);
+        emit(GetDataSuccessful());
+        return userData;
+      } else {
+        emit(GetDataError());
+        throw ("User Doesn't Exist");
+      }
+    } on FirebaseAuthException {
       emit(GetDataError());
-      return UserModel.loadingUser();
+      rethrow;
     }
   }
 
 
   Future<void> uploadUserFiles(userFile) async {
     emit(GettingData());
-    var path = '/userOrderFiles/${userFile.name}_$userID';
+    var path = '/userOrderFiles/${userFile.name}_${FirebaseAuth.instance.currentUser?.uid}';
     final file = File(userFile.path);
     final ref = FirebaseStorage.instance.ref().child(path);
     await ref.putFile(file);
     var getFileLink =
         await FirebaseStorage.instance.ref().child(path).getDownloadURL();
     DocumentReference<Map<String, dynamic>> docRef =
-        FirebaseFirestore.instance.collection('orders').doc(userID);
+        FirebaseFirestore.instance.collection('orders').doc(FirebaseAuth.instance.currentUser?.uid);
     await docRef.update({'orderFile': getFileLink});
     if (getFileLink.isEmpty) {
       emit(GetDataError());
@@ -145,46 +131,56 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  Future userLogin(String mail, String pwd, context) async {
+  Future<void> userLogin(String mail, String pwd, context) async {
+    emit(GettingData());
+
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: mail, password: pwd);
+
       IconSnackBar.show(
           context: context,
           snackBarType: SnackBarType.save,
           label: 'نجح تسجيل الدخول ');
       emit(GetDataSuccessful());
-      return NaviCubit.get(context).navigateToHome(context);
-    } on FirebaseAuthException catch (ex) {
+      NaviCubit.get(context).navigateToHome(context);
+    } on FirebaseAuthException {
       emit(GetDataError());
       IconSnackBar.show(
           context: context,
           snackBarType: SnackBarType.fail,
           label: '!اعد المحاولة');
-      return "${ex.code}: ${ex.message}";
     }
   }
 
-  Future userRegister(UserModel userModel, context) async {
+  //Firebase Register with current user data
+  Future<void> userRegister(UserModel userModel, context) async {
+    emit(GettingData());
     try {
-      FirebaseFirestore.instance
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+          email: userModel.email, password: userModel.password)
+          .then((value) =>
+      userModel.userID = FirebaseAuth.instance.currentUser!.uid);
+      await FirebaseFirestore.instance
           .collection('users')
-          .doc(userID)
+          .doc(userModel.userID)
           .set(userModel.toJson());
+
       IconSnackBar.show(
           context: context,
           snackBarType: SnackBarType.save,
           label: 'نجح تسجيل الدخول ');
+
       emit(GetDataSuccessful());
-      return NaviCubit.get(context).navigateToHome(context);
-    } on FirebaseAuthException catch (ex) {
+      NaviCubit.get(context).navigateToHome(context);
+
+    } on FirebaseAuthException {
       IconSnackBar.show(
           context: context,
           snackBarType: SnackBarType.fail,
           label: '!اعد المحاولة');
       emit(GetDataError());
-
-      return "${ex.code}: ${ex.message}";
     }
   }
 }

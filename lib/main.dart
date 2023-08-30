@@ -49,6 +49,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<BaBBloc>(
           create: (context) => BaBBloc(),
         ),
+        BlocProvider<RegisterBabBloc>(
+          create: (context) => RegisterBabBloc(),
+        ),
         BlocProvider<NaviCubit>(
           create: (context) => NaviCubit(),
         ),

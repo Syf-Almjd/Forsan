@@ -217,7 +217,8 @@ class printNowPageState extends State<printNowPage> {
                                           orderList["الوجه"].toString(),
                                       orderPaper:
                                           orderList["النوع للورق"].toString(),
-                                      orderDescription: moreRequirement.text);
+                                      orderStatus: "قيد المعالجة",
+                                      orderDescription: moreRequirement.text,);
                                   AppCubit.get(context).uploadUserOrders(
                                       submittedOrder, context);
                                   AppCubit.get(context)

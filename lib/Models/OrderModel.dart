@@ -8,6 +8,7 @@ class OrderModel {
   String orderPadding;
   String orderPaper;
   String orderDescription;
+  String orderStatus;
 
   OrderModel({
     required this.orderId,
@@ -19,6 +20,8 @@ class OrderModel {
     required this.orderPadding,
     required this.orderPaper,
     required this.orderDescription,
+    required this.orderStatus,
+
   });
 
   // Factory method to create an Order object from a JSON map
@@ -33,6 +36,7 @@ class OrderModel {
       orderPadding: json['orderPadding'],
       orderPaper: json['orderPaper'],
       orderDescription: json['orderDescription'],
+      orderStatus: json['orderStatus'],
     );
   }
 
@@ -47,6 +51,8 @@ class OrderModel {
       'orderSize': orderSize,
       'orderPadding': orderPadding,
       'orderPaper': orderPaper,
+      'orderStatus': orderStatus,
+
       'orderDescription': orderDescription,
     };
   }
