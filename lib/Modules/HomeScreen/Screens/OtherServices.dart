@@ -128,8 +128,9 @@ class otherServicesState extends State<otherServices> {
                                   });
                                   var submittedOrder = OrderModel(
                                       orderId:
-                                          "${FirebaseAuth.instance.currentUser!.uid} orderId ${Random().nextInt(1000000)}",
+                                          "${Random().nextInt(1000000)}",
                                       orderFile: "",
+                                      orderUser: FirebaseAuth.instance.currentUser!.uid,
                                       orderTitle: widget.title,
                                       orderPrice: "",
                                       orderStatus: "قيد المعالجة",

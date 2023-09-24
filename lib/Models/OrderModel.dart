@@ -1,5 +1,6 @@
 class OrderModel {
   String orderId;
+  String orderUser;
   String orderFile;
   String orderTitle;
   String orderPrice;
@@ -12,6 +13,7 @@ class OrderModel {
 
   OrderModel({
     required this.orderId,
+    required this.orderUser,
     required this.orderFile,
     required this.orderTitle,
     required this.orderPrice,
@@ -36,7 +38,7 @@ class OrderModel {
       orderPadding: json['orderPadding'],
       orderPaper: json['orderPaper'],
       orderDescription: json['orderDescription'],
-      orderStatus: json['orderStatus'],
+      orderStatus: json['orderStatus'], orderUser: 'orderUser',
     );
   }
 
@@ -52,7 +54,7 @@ class OrderModel {
       'orderPadding': orderPadding,
       'orderPaper': orderPaper,
       'orderStatus': orderStatus,
-
+      'orderUser': orderUser,
       'orderDescription': orderDescription,
     };
   }

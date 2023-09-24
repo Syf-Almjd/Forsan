@@ -358,7 +358,7 @@ Padding logoContainer(context) {
         border: Border.all(width: 2),
       ),
       child: const Image(
-        image: AssetImage(Assets.assetsForsanLogo),
+        image: AssetImage(Assets.assetsForsanNoBg),
         fit: BoxFit.contain,
       ),
     ),

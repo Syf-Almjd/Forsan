@@ -1,7 +1,7 @@
 name: forsan
 description: A Printing Service APP.
 
-version: 1.0.0+5
+version: 1.0.0+6
 
 environment:
   sdk: '>=3.0.1 <4.0.0'
@@ -62,3 +62,4 @@ flutter:
     - assets/print.gif
     - assets/homebg.jpg
     - assets/profilePicture.jpg
+    - assets/forsan_no_bg.png

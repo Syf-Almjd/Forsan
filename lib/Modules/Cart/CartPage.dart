@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/Components/Components.dart';
+import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
 import 'package:forsan/Models/OrderModel.dart';
 import 'package:forsan/Modules/Cart/CartList.dart';
 
@@ -30,29 +31,35 @@ class _cartPageState extends State<cartPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: getWidth(40, context),
-                  height: getHeight(8, context),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.horizontal(
-                        left: Radius.circular(100), right: Radius.circular(20)),
-                    color: Colors.red,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.delete_forever_outlined,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        "مسح",
-                        style: fontAlmarai(size: 8, textColor: Colors.white),
-                      ),
-                    ],
+                InkWell(
+                  onTap:  () {
+                    showToast("اتصال", SnackBarType.save, context);
+                    // UrlLauncher.launch('mailto:${widget.email.toString()}');
+                  },
+                  child: Container(
+                    width: getWidth(40, context),
+                    height: getHeight(8, context),
+                    decoration:  BoxDecoration(
+                      borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(100), right: Radius.circular(20)),
+                      color: Colors.blue.withOpacity(0.9),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.wifi_calling_3_outlined,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          "التواصل السريع",
+                          style: fontAlmarai(size: 8, textColor: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
 
@@ -108,7 +115,7 @@ class _cartPageState extends State<cartPage> {
                   scrollDirection: Axis.vertical,
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) => cartList(
-                    order: snapshot.data[index],
+                    order: snapshot.data.reversed.toList()[index], // Reverse the list and then access items
                     onTap: (index) {
                       showToast("item no: $index", SnackBarType.save,context);
                     },

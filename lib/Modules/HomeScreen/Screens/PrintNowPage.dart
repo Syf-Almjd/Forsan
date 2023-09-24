@@ -207,7 +207,7 @@ class printNowPageState extends State<printNowPage> {
                                   });
                                   var submittedOrder = OrderModel(
                                       orderId:
-                                          "${FirebaseAuth.instance.currentUser!.uid} orderId ${Random().nextInt(1000000)}",
+                                          "${Random().nextInt(1000000)}",
                                       orderFile: "",
                                       orderTitle: widget.title,
                                       orderPrice: "",
@@ -218,7 +218,7 @@ class printNowPageState extends State<printNowPage> {
                                       orderPaper:
                                           orderList["النوع للورق"].toString(),
                                       orderStatus: "قيد المعالجة",
-                                      orderDescription: moreRequirement.text,);
+                                      orderDescription: moreRequirement.text, orderUser: FirebaseAuth.instance.currentUser!.uid,);
                                   AppCubit.get(context).uploadUserOrders(
                                       submittedOrder, context);
                                   AppCubit.get(context)

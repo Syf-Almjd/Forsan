@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:forsan/Components/Components.dart';
@@ -160,16 +159,17 @@ class _profilePageState extends State<profilePage> {
                           title: "الخصوصية والامان",
                           icon: Icons.wallet,
                           onPress: () {
-                            NaviCubit.get(context).navigate(
-                                context,
-                                settingsPage(
-                                  currentUser: currentUser,
-                                ));
+                            NaviCubit.get(context)
+                                .navigate(context, OurPolicies());
                           }),
+
                       ProfileMenuWidget(
                           title: "سياسات البرنامج",
                           icon: Icons.verified_user,
-                          onPress: () {NaviCubit.get(context).navigate(context, OurPolicies());}),
+                          onPress: () {
+                            NaviCubit.get(context)
+                                .navigate(context, OurPolicies());
+                          }),
                       const Divider(),
                       const SizedBox(height: 10),
                       ProfileMenuWidget(
