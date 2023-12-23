@@ -14,7 +14,9 @@ class itemType extends StatelessWidget {
       children: [
         getCube(2, context),
         GestureDetector(
-            onTap: () {},
+            onTap: () {
+              onTap();
+            },
             child: Container(
               width: getWidth(22, context),
               alignment: FractionalOffset.center,

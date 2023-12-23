@@ -129,6 +129,7 @@ class _RegisterFirstPageState extends State<RegisterFirstPage> {
               child: loadButton(
                   buttonText: "التالي",
                   onPressed: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
                     if (validateForm(_validateKey)) {
                       userData = UserModel(
                           email: "",

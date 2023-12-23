@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
@@ -23,19 +24,29 @@ class printNowPage extends StatefulWidget {
 
 class printNowPageState extends State<printNowPage> {
   TextEditingController moreRequirement = TextEditingController();
+  TextEditingController discountText = TextEditingController();
+
   bool fileUploaded = false;
   var FILEuploded;
   String fileName = "";
-  String fileLink = "";
   Map<String, String> orderList = {};
-  bool _isLoading = false;
+  bool changePassBtn = false;
+  var discountCode;
 
   void addItemToOrder(String key, String item) {
     orderList[key] = (item);
   }
 
+  String chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random rnd = Random();
+
+  GeneCode() => String.fromCharCodes(
+      Iterable.generate(8, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
+
   @override
   Widget build(BuildContext context) {
+    String generatedCode = GeneCode();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -51,7 +62,7 @@ class printNowPageState extends State<printNowPage> {
               color: Colors.black,
             ),
             onPressed: () {
-              NaviCubit.get(context).pop(context, widget);
+              NaviCubit.get(context).pop(context);
             },
           ),
         ),
@@ -79,7 +90,8 @@ class printNowPageState extends State<printNowPage> {
               ),
               Text(
                 "نوع الخدمة: ${widget.title}",
-                style: fontAlmarai(fontWeight: FontWeight.bold), textAlign: TextAlign.center,
+                style: fontAlmarai(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
               ),
               Padding(
                 padding: const EdgeInsets.all(15),
@@ -182,56 +194,42 @@ class printNowPageState extends State<printNowPage> {
                     controller: moreRequirement,
                     hintText: "اذكر لنا تفاصيل أخرى للطباعة التي تريدها "),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CupertinoSwitch(
+                    applyTheme: true,
+                    value: changePassBtn,
+                    onChanged: (value) => setState(() {
+                      changePassBtn = value;
+                    }),
+                  ),
+                  const Text('هل لديك كود خصم؟'),
+                ],
+              ),
+              if (changePassBtn)
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: TextField(
+                    controller: discountText,
+                    decoration: const InputDecoration(
+                        labelText: 'استخدم (طالب) لخصم الطلاب',
+                        prefixIcon: Icon(Icons.price_change_outlined),
+                        suffixIcon: Icon(Icons.price_change_outlined)),
+                  ),
+                ),
               SizedBox(
-                  height: getHeight(10, context),
-                  width: getWidth(90, context),
-                  child: Center(
-                    child: _isLoading
-                        ? loadingAnimation()
-                        : Container(
-                            width: double.infinity,
-                            height: 60.0,
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: ElevatedButton(
-                              style: const ButtonStyle(
-                                  animationDuration:
-                                      Duration(milliseconds: 500),
-                                  enableFeedback: true),
-                              onPressed: () async {
-                                if (orderList.values.length != 4 ||
-                                    fileName == "") {
-                                  showToast("يرجى ان تكمل كل الخيارات", SnackBarType.fail ,context);
-                                } else {
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
-                                  var submittedOrder = OrderModel(
-                                      orderId:
-                                          "${Random().nextInt(1000000)}",
-                                      orderFile: "",
-                                      orderTitle: widget.title,
-                                      orderPrice: "",
-                                      orderColor: orderList["اللون"].toString(),
-                                      orderSize: orderList["الحجم"].toString(),
-                                      orderPadding:
-                                          orderList["الوجه"].toString(),
-                                      orderPaper:
-                                          orderList["النوع للورق"].toString(),
-                                      orderStatus: "قيد المعالجة",
-                                      orderDescription: moreRequirement.text, orderUser: FirebaseAuth.instance.currentUser!.uid,);
-                                  AppCubit.get(context).uploadUserOrders(
-                                      submittedOrder, context);
-                                  AppCubit.get(context)
-                                      .uploadUserFiles(FILEuploded);
-                                }
-                              },
-                              child: Text(
-                                "ابدا الطلب",
-                                
-                              ),
-                            ),
-                          ),
-                  )),
+                height: getHeight(10, context),
+                width: getWidth(90, context),
+                child: Center(
+                  child: loadButton(
+                      onPressed: () async {
+                        checkUserInput(generatedCode);
+                      },
+                      buttonText: "ابدا الطلب"),
+                ),
+              ),
               getCube(5, context)
             ],
           ),
@@ -240,10 +238,36 @@ class printNowPageState extends State<printNowPage> {
     );
   }
 
+  void checkUserInput(generatedCode) {
+    if (changePassBtn && discountText.text != "طالب") {
+      showToast("لا يوجد هذا الخصم", SnackBarType.fail, context);
+    }
+    if (orderList.values.length != 4 || fileName == "") {
+      showToast("يرجى ان تكمل كل الخيارات", SnackBarType.fail, context);
+    } else {
+      OrderModel submittedOrder = OrderModel(
+        orderId: generatedCode,
+        orderFile: "",
+        orderTitle: widget.title,
+        orderPrice: "",
+        orderColor: orderList["اللون"].toString(),
+        orderSize: orderList["الحجم"].toString(),
+        orderPadding: orderList["الوجه"].toString(),
+        orderPaper: orderList["النوع للورق"].toString(),
+        orderStatus: "لم يدفع",
+        orderDescription: moreRequirement.text,
+        orderUser: FirebaseAuth.instance.currentUser!.uid,
+        orderType: 'printing',
+      );
+      AppCubit.get(context).uploadUserOrders(submittedOrder, context);
+      AppCubit.get(context).uploadUserFiles(FILEuploded, submittedOrder);
+    }
+  }
+
   void _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-        // allowedExtensions: ['jpg', 'pdf', 'doc'],
-        );
+      type: FileType.media,
+    );
     if (result != null && result.files.single.path != null) {
       /// Load result and file details
       PlatformFile file = result.files.first;

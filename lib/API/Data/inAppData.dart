@@ -71,12 +71,12 @@ Map<String, String> socialMediaList = {
       "",
   "https://i0.wp.com/aimanpsikologi.com/wp-content/uploads/2018/01/instagram-colourful-icon.png?ssl=1":
       "",
-  "https://cdn-icons-png.flaticon.com/512/124/124034.png?w=360": "https://wa.me/+96651236432",
+  "https://cdn-icons-png.flaticon.com/512/124/124034.png?w=360": "https://wa.me/+966501510093",
   "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/800px-Telegram_2019_Logo.svg.png":
-      "https://t.me/+96651236432",
+      "https://t.me/+966501510093",
   "https://static-00.iconduck.com/assets.00/gmail-icon-512x511-fih5xfbp.png":
       "mailto:forsan.print@gmail.com",
-  "https://media.tenor.com/zVNzIFTdYIEAAAAC/call.gif": "tel:+96651236432",
+  "https://media.tenor.com/zVNzIFTdYIEAAAAC/call.gif": "tel:+966501510093",
 };
 
 List<String> serviceNames = [

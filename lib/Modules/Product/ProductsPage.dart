@@ -1,18 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forsan/API/Data/inAppData.dart';
 import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
-import 'package:forsan/Modules/Cart/CartPage.dart';
 import 'package:forsan/Modules/HomeScreen/Screens/PrintNowPage.dart';
-import 'package:forsan/Modules/Product/ItemTypeList.dart';
+import 'package:forsan/Modules/Product/ItemType.dart';
 
+import '../../API/Data/inAppData.dart';
 import '../../Components/Components.dart';
 import '../../Cubit/AppDataCubit/app_cubit.dart';
 import '../../Cubit/BaB BloC/ba_b_bloc.dart';
 import '../../Models/ProductModel.dart';
-import 'ItemsList.dart';
+import 'DetailsPage.dart';
+import 'ProductCardView.dart';
 
 class productsPage extends StatefulWidget {
   const productsPage({super.key});
@@ -24,6 +23,7 @@ class productsPage extends StatefulWidget {
 class _productsPageState extends State<productsPage> {
   @override
   Widget build(BuildContext context) {
+    bool isReversed = false;
     final appDataState = BlocProvider.of<AppCubit>(context);
     return SafeArea(
       child: Scaffold(
@@ -34,8 +34,9 @@ class _productsPageState extends State<productsPage> {
             children: [
               const Spacer(),
               InkWell(
-                onTap: (){ BlocProvider.of<BaBBloc>(context)
-                    .add(TabChange(1));},
+                onTap: () {
+                  BlocProvider.of<BaBBloc>(context).add(TabChange(1));
+                },
                 child: Column(
                   children: [
                     const Icon(
@@ -70,7 +71,10 @@ class _productsPageState extends State<productsPage> {
               ),
               const Spacer(),
               InkWell(
-                onTap: (){NaviCubit.get(context).navigate(context, const printNowPage("الطباعة"));},
+                onTap: () {
+                  NaviCubit.get(context)
+                      .navigate(context, const printNowPage("الطباعة"));
+                },
                 child: Column(
                   children: [
                     const Icon(
@@ -99,7 +103,11 @@ class _productsPageState extends State<productsPage> {
               reverse: true,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) =>
-                  itemType(ProductListType[index], () {}),
+                  itemType(ProductListType[index], () {
+                setState(() {
+                  isReversed = !isReversed;
+                });
+              }),
             ),
           ),
           getCube(2, context),
@@ -116,7 +124,6 @@ class _productsPageState extends State<productsPage> {
                   return const Center(
                     child: Text(
                       "لا يوجد منتجات",
-                      
                     ),
                   );
                 }
@@ -131,9 +138,16 @@ class _productsPageState extends State<productsPage> {
                     ),
                     itemCount: ListProducts.length,
                     shrinkWrap: true,
+                    // reverse: isReversed,
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return ProductCardView(product: ListProducts[index]);
+                      return ProductCardView(
+                        product: ListProducts[index],
+                        onTap: (productData) {
+                          NaviCubit.get(context).navigate(
+                              context, DetailsPage(product: productData));
+                        },
+                      );
                     });
               },
             ),

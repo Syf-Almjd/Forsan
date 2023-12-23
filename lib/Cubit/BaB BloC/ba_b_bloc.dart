@@ -23,6 +23,7 @@ class BaBBloc extends Bloc<BaBEvent, BaBState> {
     });
   }
 }
+
 class RegisterBabBloc extends Bloc<BaBEvent, RegisterPagesState> {
   RegisterBabBloc() : super(const RegisterPagesInitial(0)) {
     on<BaBEvent>((event, emit) {

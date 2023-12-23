@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:forsan/Models/UserModel.dart';
 import 'package:forsan/generated/assets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -200,10 +205,11 @@ Widget rowHomeItems({
   required String name,
   required String img,
   required Function onTap,
-
 }) {
   return InkWell(
-    onTap: (){onTap(name);},
+    onTap: () {
+      onTap(name);
+    },
     child: Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -248,9 +254,7 @@ Widget rowHomeItems({
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                name
-              ),
+              Text(name),
             ],
           ),
         ),
@@ -264,11 +268,12 @@ Widget socialMediaItem({
   required String img,
   required Function onTap,
 }) {
-
   return Padding(
     padding: const EdgeInsets.all(7.0),
     child: InkWell(
-      onTap: (){onTap(index);},
+      onTap: () {
+        onTap(index);
+      },
       child: SizedBox(
         height: 50,
         child: ClipRRect(
@@ -295,32 +300,40 @@ Widget socialMediaItem({
   );
 }
 
+//Show a toast
+
 Widget loadButton({
+  double? buttonHeight,
+  double? buttonWidth,
+  Color? textColor,
+  double? textSize,
+  double? buttonElevation,
   required Function() onPressed,
   required String buttonText,
 }) {
   return BlocBuilder<AppCubit, AppStates>(builder: (context, state) {
     if (state is GettingData) {
       return loadingAnimation(
-          loadingType: LoadingAnimationWidget.stretchedDots(
-              color: Colors.yellowAccent, size: getWidth(15, context)));
+          loadingType: LoadingAnimationWidget.beat(
+              color: Colors.yellow, size: getWidth(10, context)));
     } else {
       return Container(
-        width: getWidth(80, context),
-        height: 60.0,
+        width: buttonWidth ?? getWidth(80, context),
+        height: buttonHeight ?? 60.0,
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
-            elevation: 10,
+            elevation: buttonElevation ?? 10.0,
           ),
           onPressed: onPressed,
           child: Text(
             buttonText,
             style: TextStyle(
-                fontSize: getWidth(10, context), color: Colors.white),
+                fontSize: textSize ?? getWidth(10, context),
+                color: textColor ?? Colors.white),
           ),
         ),
       );
@@ -328,17 +341,23 @@ Widget loadButton({
   });
 }
 
-//Show a toast
 void showToast(String text, SnackBarType type, context) => IconSnackBar.show(
-  context: context,
-  snackBarType: type,
-  label: text,
-);
+      context: context,
+      snackBarType: type,
+      label: text,
+    );
+
+String generateCode() {
+  String chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  return String.fromCharCodes(Iterable.generate(
+      8, (_) => chars.codeUnitAt(Random().nextInt(chars.length))));
+}
 
 //Validate Text field
 validateForm(
-    GlobalKey<FormState> validateKey,
-    ) {
+  GlobalKey<FormState> validateKey,
+) {
   if (validateKey.currentState!.validate()) {
     validateKey.currentState!.save();
     return true;
@@ -346,6 +365,7 @@ validateForm(
     return false;
   }
 }
+
 ///shows logo
 Padding logoContainer(context) {
   return Padding(
@@ -366,54 +386,134 @@ Padding logoContainer(context) {
 }
 
 void openUrl(String url) {
-  var openUrl =  Uri.parse(url);
+  var openUrl = Uri.parse(url);
   launchUrl(
     openUrl,
     mode: LaunchMode.externalApplication,
   );
 }
-enum asd {
-  save,
-  fail,
-  alert,
-}
-
 
 ///For photo selection
 Widget chooseFile(context) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.center,
+  return Container(
+    decoration: const BoxDecoration(
+        color: Colors.amberAccent,
+        borderRadius: BorderRadius.all(Radius.circular(20))),
+    child: Stack(
+      children: [
+        ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: const Image(
+              image: AssetImage(Assets.assetsProfilePicture),
+              fit: BoxFit.fill,
+            )),
+        Positioned(
+          bottom: 25,
+          right: 25,
+          child: Container(
+            width: 35,
+            height: 35,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: Colors.black12),
+            child: const Icon(
+              Icons.mode_edit_outline_outlined,
+              color: Colors.black,
+              size: 20,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget previewProductImage(fileUser, context) {
+  fileUser = base64Decode(fileUser);
+  return Container(
+    decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        shape: BoxShape.rectangle,
+        color: Colors.amber),
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Image.memory(
+        fileUser,
+        height: getHeight(20, context),
+        width: getWidth(30, context),
+        fit: BoxFit.cover,
+      ),
+    ),
+  );
+}
+
+Widget previewDetailsImage(
+  fileUser,
+  context,
+) {
+  if (fileUser == "NOPHOTO") {
+    fileUser = UserModel.loadingUser().photoID;
+  }
+  fileUser = base64Decode(fileUser);
+  return Container(
+    decoration:
+        const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+    child: Center(
+      child: ClipOval(
+        child: Image.memory(
+          fileUser,
+          height: getHeight(15, context),
+          width: getWidth(32, context),
+          fit: BoxFit.cover,
+        ),
+      ),
+    ),
+  );
+}
+
+///For photo preview
+Widget previewImage(
+  fileUser,
+  context,
+) {
+  if (fileUser == "NOPHOTO") {
+    fileUser = UserModel.loadingUser().photoID;
+  }
+  fileUser = base64Decode(fileUser);
+  return Stack(
     children: [
-      Expanded(
-        child: Icon(
-          Icons.person,
-          size: getHeight(10, context),
-          color: Colors.blueGrey.shade300,
+      Container(
+        decoration:
+            const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ClipOval(
+              child: Image.memory(
+                fileUser,
+                height: getHeight(15, context),
+                width: getWidth(32, context),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
         ),
       ),
     ],
   );
 }
 
-///For photo preview
-Widget fileChosen(fileUser, context) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      Image.memory(fileUser),
-    ],
-  );
-}
-
-
 void showToast2(String text, asd, context) => IconSnackBar.show(
-  context: context,
-  snackBarType: asd as SnackBarType,
-  label: text,
-);
+      context: context,
+      snackBarType: asd as SnackBarType,
+      label: text,
+    );
 
+Future<Uint8List> assetToUint8List(String assetPath) async {
+  ByteData data = await rootBundle.load(assetPath);
+  List<int> bytes = data.buffer.asUint8List();
+  return Uint8List.fromList(bytes);
+}
 
 //OTHER
 
@@ -450,8 +550,6 @@ void showToast2(String text, asd, context) => IconSnackBar.show(
 //           ),
 //   );
 // }
-
-
 
 // Widget buildProductDetails({String? name, String? img}) {
 //   return Card(

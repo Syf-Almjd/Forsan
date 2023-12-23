@@ -1,4 +1,3 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:forsan/Models/ProductModel.dart';
 
@@ -9,54 +8,28 @@ class ProductCardView extends StatelessWidget {
       {Key? key,
       required this.product,
       this.imageAlignment = Alignment.bottomCenter,
-      this.onTap})
+      required this.onTap})
       : super(key: key);
 
   final ProductModel product;
   final Alignment imageAlignment;
-  final Function(String)? onTap;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          onTap(product);
+        },
         child: Column(children: [
           Expanded(
             child: SizedBox(
               height: getHeight(10, context),
               width: getWidth(100, context),
               child: Center(
-                child: FutureBuilder(
-                  future: FirebaseStorage.instance
-                      .ref()
-                      .child("products/${product.productImgID}.png")
-                      .getDownloadURL(),
-                  builder: (context, snapshot) {
-                    if (snapshot.data == null) {
-                      return loadingAnimation();
-                    }
-                    return ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.network(
-                          snapshot.data!,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            } else {
-                              return loadingAnimation(); // Show a loading indicator while the image is loading
-                            }
-                          },
-                          errorBuilder: (context, error, stackTrace) => Text(
-                            "خطا $error",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          alignment: imageAlignment,
-                          fit: BoxFit.cover,
-                        ));
-                  },
-                ),
+                child: previewProductImage(product.productImgID, context),
               ),
             ),
           ),

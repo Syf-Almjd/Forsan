@@ -89,7 +89,6 @@ class ContactUsPage extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: socialMediaList.length,
                       itemBuilder: (context, index) {
-
                         return socialMediaItem(
                             index: index,
                             img: socialMediaList.keys.toList()[index], onTap: (index) {

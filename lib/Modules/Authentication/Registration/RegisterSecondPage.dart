@@ -5,9 +5,7 @@ import 'package:forsan/Cubit/BaB%20BloC/ba_b_bloc.dart';
 
 import '../../../Components/Components.dart';
 import '../../../Components/Shared/Singleton.dart';
-import '../../../Cubit/Navigation/navi_cubit.dart';
 import '../../../Models/UserModel.dart';
-import '../Login/LoginUser.dart';
 
 class RegisterSecondPage extends StatefulWidget {
   final UserModel previousUserData;
@@ -62,9 +60,11 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                 getCube(2, context),
                 TextFormField(
                   validator: (value) {
-                    if (value!.isEmpty || !value.contains('@')) {
-                      showToast("الايميل غير صحيح!", SnackBarType.fail,
-                          context);
+                    if (value!.isEmpty ||
+                        !value.contains('@') ||
+                        !value.contains('.')) {
+                      showToast(
+                          "الايميل غير صحيح!", SnackBarType.fail, context);
                       return 'الايميل غير صحيح';
                     } else {
                       return null;
@@ -83,8 +83,7 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty || value.length <= 8) {
-                      showToast("كلمة السر ضعيفة!", SnackBarType.fail,
-                          context);
+                      showToast("كلمة السر ضعيفة!", SnackBarType.fail, context);
                       return 'كلمة السر ضعيفة';
                     } else {
                       return null;
@@ -111,8 +110,8 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty || !(value == password.text)) {
-                      showToast("كلمة السر غير متطابقة!",
-                          SnackBarType.fail, context);
+                      showToast(
+                          "كلمة السر غير متطابقة!", SnackBarType.fail, context);
                       return "كلمة السر غير متطابقة";
                     } else {
                       return null;
@@ -140,20 +139,22 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
           ),
           Center(
               child: loadButton(
-                  buttonText: "التالي..",
+                  buttonText: "التالي",
                   onPressed: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
                     if (validateForm(_validateKey)) {
                       userData = UserModel(
                           email: email.text,
                           password: password.text,
                           name: widget.previousUserData.name,
-                          phoneNumber: widget.previousUserData.name,
+                          phoneNumber: widget.previousUserData.phoneNumber,
                           photoID: "",
                           userID: "",
                           address: widget.previousUserData.address,
                           points: '10.00');
-                      Singleton().userDataToBeUploaded=userData;
-                      BlocProvider.of<RegisterBabBloc>(context).add(TabChange(3));
+                      Singleton().userDataToBeUploaded = userData;
+                      BlocProvider.of<RegisterBabBloc>(context)
+                          .add(TabChange(3));
                     }
                   })),
           getCube(5, context),

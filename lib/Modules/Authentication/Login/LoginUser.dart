@@ -20,6 +20,12 @@ class _LoginState extends State<Login> {
   TextEditingController pass = TextEditingController();
   final _validateKey = GlobalKey<FormState>();
 
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(

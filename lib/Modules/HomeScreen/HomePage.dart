@@ -8,7 +8,6 @@ import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
 import 'package:forsan/Modules/HomeScreen/Screens/OtherServices.dart';
 import 'package:forsan/Modules/Vendor/ContactUs.dart';
 import 'package:forsan/generated/assets.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../API/Data/inAppData.dart';
 import 'Screens/PrintNowPage.dart';

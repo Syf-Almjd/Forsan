@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forsan/Cubit/BaB%20BloC/ba_b_bloc.dart';
 import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
-import 'package:forsan/Modules/Authentication/Login/LoginUser.dart';
 import 'package:forsan/Modules/Cart/CartPage.dart';
 import 'package:forsan/Modules/Product/ProductsPage.dart';
 import 'package:forsan/Modules/Profile/Profile.dart';
@@ -27,10 +26,6 @@ class HomeMain extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              if (FirebaseAuth.instance.currentUser!.uid ==
-                  '5DFCmjNqM0SQenH27prKEjE1FL63') {
-                // return admin("Admin");
-              }
               return Scaffold(
                 body: BlocBuilder<BaBBloc, BaBState>(
                   builder: (context, state) {
@@ -38,7 +33,7 @@ class HomeMain extends StatelessWidget {
                       return const productsPage();
                     }
                     if (state is CartScreen) {
-                      return const cartPage();
+                      return const CartPage();
                     }
                     if (state is ProfileScreen) {
                       return const profilePage();
@@ -77,16 +72,24 @@ class HomeMain extends StatelessWidget {
                 globalBackgroundColor: Colors.white,
                 pages: listPagesViewModel(context),
                 showSkipButton: false,
-                skip:  Text("تخطي", style: fontAlmarai(textColor: Colors.amberAccent),),
-                next:  Text("التالي", style:fontAlmarai(textColor: Colors.amberAccent),),
-                done: const Icon(Icons.not_started_outlined,size: 50,),
+                skip: Text(
+                  "تخطي",
+                  style: fontAlmarai(textColor: Colors.amberAccent),
+                ),
+                next: Text(
+                  "التالي",
+                  style: fontAlmarai(textColor: Colors.amberAccent),
+                ),
+                done: const Icon(
+                  Icons.not_started_outlined,
+                  size: 50,
+                ),
                 onDone: () {
                   NaviCubit.get(context).navigate(context, const SignLayout());
                 },
                 onSkip: () {
                   NaviCubit.get(context).navigate(context, const SignLayout());
                 },
-
                 dotsDecorator: DotsDecorator(
                   size: const Size.square(10.0),
                   activeSize: const Size(20.0, 10.0),
@@ -97,47 +100,6 @@ class HomeMain extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25.0)),
                 ),
               );
-              // return Scaffold(
-              //   body: BlocBuilder<BaBBloc, BaBState>(
-              //     builder: (context, state) {
-              //       if (state is ProductScreen) {
-              //         return const productsPage();
-              //       }
-              //       if (state is CartScreen) {
-              //         return const cartPage();
-              //       }
-              //       if (state is ProfileScreen) {
-              //         return const profilePage();
-              //       }
-              //       if (state is HomeScreen) {
-              //         return const homePage();
-              //       } else {
-              //         return const homePage();
-              //       }
-              //     },
-              //   ),
-              //   bottomNavigationBar: BlocBuilder<BaBBloc, BaBState>(
-              //     builder: (context, state) {
-              //       return AnimatedBottomNavigationBar(
-              //         icons: homeMenuIcons,
-              //         activeIndex: state.defaultIndex,
-              //         backgroundColor: Colors.amberAccent,
-              //         leftCornerRadius: 50,
-              //         iconSize: 28,
-              //         elevation: 20,
-              //         gapLocation: GapLocation.none,
-              //         inactiveColor: Colors.grey,
-              //         splashColor: Colors.white,
-              //         borderColor: Colors.cyan,
-              //         activeColor: Colors.white,
-              //         rightCornerRadius: 50,
-              //         onTap: (index) =>
-              //             BlocProvider.of<BaBBloc>(context).add(TabChange(index)),
-              //         //other params
-              //       );
-              //     },
-              //   ),
-              // );
             }
           },
         ),

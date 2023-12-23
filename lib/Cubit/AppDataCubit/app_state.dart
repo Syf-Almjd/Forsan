@@ -35,3 +35,15 @@ class SelectIt extends AppStates {}
 class UnSelectIt extends AppStates {}
 
 //add abstract and check what happenns
+
+
+//Local Data States
+class GettingLocalData extends AppStates {}
+
+class UpdatingLocalData extends AppStates {}
+
+class DeleteLocalData extends AppStates {}
+
+class LocalDataFailed extends AppStates {}
+
+class LocalDataSuccessful extends AppStates {}
