@@ -84,7 +84,7 @@ This project is licensed under the [MIT License](https://opensource.org/license/
 
 ## Contact
 
-For any inquiries or support, please contact our team at support@example.com.
+For any inquiries or support, please contact me at syfalmjd11@gmail.com.
 
 Thank you for using our Printing and Library Services App! We hope it enhances your printing and library experience.
 
