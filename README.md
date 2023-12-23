@@ -59,13 +59,13 @@ To run the app locally, follow these steps:
 
 ### Screenshots
 
-| Screenshot 1                                    | Screenshot 2 |
-|-------------------------------------------------|--------------|
+| Screenshot 1                                    | Screenshot 2                                    |
+|-------------------------------------------------|-------------------------------------------------|
 | ![Screenshot 1](assets/screenshots/Image1.jpeg) | ![Screenshot 2](assets/screenshots/Image2.jpeg) |
 
-| Screenshot 4 | Screenshot 5 |
-|--------------|--------------|
-| ![Screenshot 4](assets/screenshots/Image4.jpeg) | ![Screenshot 5](assets/screenshots/Image5.jpeg) |
+| Screenshot 4                                    | Screenshot 5                                    |
+|-------------------------------------------------|-------------------------------------------------|
+| ![Screenshot 4](assets/screenshots/Image3.jpeg) | ![Screenshot 5](assets/screenshots/Image4.jpeg) |
 
 
 ## Requirements
