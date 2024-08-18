@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/Components/Components.dart';
 import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
 import 'package:forsan/Models/OrderModel.dart';
 import 'package:forsan/Modules/Cart/CartList.dart';
+import 'package:forsan/Modules/Cart/HistoryCartPage.dart';
 import 'package:forsan/Modules/Cart/Payment/PaymentPage.dart';
 
 import '../../Cubit/AppDataCubit/app_cubit.dart';
@@ -20,18 +20,20 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        await Future.delayed(const Duration(seconds: 2));
-      },
-      child: Column(
-        children: [
-          Material(
-            color: Colors.amberAccent,
-            elevation: 0,
-            borderRadius:
-                const BorderRadius.vertical(bottom: Radius.circular(20)),
-            child: Padding(
+    return Scaffold(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.delayed(const Duration(seconds: 2));
+          setState(() {});
+        },
+        child: Column(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20)),
+                  color: Colors.amber),
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,8 +74,9 @@ class _CartPageState extends State<CartPage> {
                   const Spacer(),
                   InkWell(
                     onTap: () {
-                      showToast("اختر الطلب لدفع", SnackBarType.alert, context);
-                      // NaviCubit.get(context).navigate(context, PaymentPage(order: ));
+                      // showToast("اختر الطلب لدفع", SnackBarType.alert, context);
+                      NaviCubit.get(context)
+                          .navigate(context, const HistoryCartPage());
                       // UrlLauncher.launch('mailto:${widget.email.toString()}');
                     },
                     child: Container(
@@ -90,12 +93,12 @@ class _CartPageState extends State<CartPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const Icon(
-                            Icons.payment_outlined,
+                            Icons.history_toggle_off,
                             size: 30,
                             color: Colors.green,
                           ),
                           Text(
-                            "الدفع والتوصيل",
+                            "الطلبات القديمة",
                             style: fontAlmarai(
                                 size: getWidth(3, context),
                                 textColor: Colors.green),
@@ -107,37 +110,70 @@ class _CartPageState extends State<CartPage> {
                 ],
               ),
             ),
-          ),
-          getCube(2, context),
-          FutureBuilder(
-            future: AppCubit.get(context).getOrdersData(),
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              if (snapshot.data == null) {
-                return Expanded(child: Center(child: loadingAnimation()));
-              }
-              if ((snapshot.data).isEmpty) {
-                return const Expanded(
-                    child: Center(child: Text("لا يوحد طلبات")));
-              }
-              return Expanded(
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) => CartList(
-                    order: snapshot.data.reversed.toList()[index],
-                    // Reverse the list and then access items
-                    onTap: (order) {
-                      NaviCubit.get(context)
-                          .navigate(context, PaymentPage(order: order));
-                    },
+            getCube(2, context),
+            FutureBuilder(
+              future: AppCubit.get(context).getOrdersData(),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.data == null) {
+                  return Expanded(child: Center(child: loadingAnimation()));
+                }
+                if ((snapshot.data).isEmpty) {
+                  return Expanded(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text("لا يوجد طلبات لديك في الوقت الحالي"),
+                      Container(
+                        width: getWidth(50, context),
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: IconButton(
+                            onPressed: () {
+                              NaviCubit.get(context)
+                                  .navigate(context, const HistoryCartPage());
+                            },
+                            icon: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'الطلبات المنجزه',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                getCube(2, context),
+                                const Icon(
+                                  Icons.history,
+                                  color: Colors.blue,
+                                ),
+                              ],
+                            )),
+                      ),
+                    ],
+                  ));
+                }
+                snapshot.data.sort((a, b) => DateTime.parse(b.orderDate)
+                    .compareTo(DateTime.parse(a.orderDate)));
+
+                return Expanded(
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) => CartList(
+                      order: snapshot.data[index],
+                      // Reverse the list and then access items
+                      onTap: (order) {
+                        NaviCubit.get(context)
+                            .navigate(context, PaymentPage(order: order));
+                      },
+                    ),
                   ),
-                ),
-              );
-            },
-          )
-        ],
+                );
+              },
+            )
+          ],
+        ),
       ),
     );
   }

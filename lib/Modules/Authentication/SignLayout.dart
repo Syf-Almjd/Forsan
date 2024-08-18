@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 import '../../Components/Components.dart';
 import '../../Components/Shared/Singleton.dart';
 import '../../Cubit/BaB BloC/ba_b_bloc.dart';
@@ -27,15 +26,14 @@ class _SignLayoutState extends State<SignLayout> {
           children: [
             logoContainer(context),
             Expanded(
-              child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 100),
+              child: Container(
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(20)),
                       color: Colors.white),
-                  child:
-                      BlocBuilder<RegisterBabBloc, RegisterPagesState>(builder: (context, state) {
+                  child: BlocBuilder<RegisterBabBloc, RegisterPagesState>(
+                      builder: (context, state) {
                     if (state is LoginScreen) {
                       return const Login();
                     }

@@ -120,7 +120,9 @@ class _productsPageState extends State<productsPage> {
                   return loadingAnimation();
                 }
 
-                if (snapshot.hasError || !snapshot.hasData) {
+                if (snapshot.hasError ||
+                    !snapshot.hasData ||
+                    snapshot.data!.docs.isEmpty) {
                   return const Center(
                     child: Text(
                       "لا يوجد منتجات",

@@ -52,7 +52,7 @@ class _RegisterFirstPageState extends State<RegisterFirstPage> {
               Center(
                 child: Text(
                   "التسجيل",
-                  style: TextStyle(fontSize:  getWidth(15, context)),
+                  style: TextStyle(fontSize: getWidth(15, context)),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -65,8 +65,7 @@ class _RegisterFirstPageState extends State<RegisterFirstPage> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty) {
-                      showToast(
-                          "الاسم غير صحيح!", SnackBarType.fail, context);
+                      showToast("الاسم غير صحيح!", SnackBarType.fail, context);
                       return 'الاسم غير صحيح';
                     } else {
                       return null;
@@ -85,8 +84,7 @@ class _RegisterFirstPageState extends State<RegisterFirstPage> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty || !value.contains('0')) {
-                      showToast("الرقم غير صحيح!", SnackBarType.fail,
-                          context);
+                      showToast("الرقم غير صحيح!", SnackBarType.fail, context);
                       return 'غير صحيح';
                     } else {
                       return null;
@@ -138,12 +136,14 @@ class _RegisterFirstPageState extends State<RegisterFirstPage> {
                           phoneNumber: phoneNumber.text,
                           photoID: "",
                           userID: "",
-                          address: address.text, points: '');
-                      Singleton().userDataToBeUploaded=userData;
-                      BlocProvider.of<RegisterBabBloc>(context).add(TabChange(2));
+                          address: address.text,
+                          points: '');
+                      Singleton().userDataToBeUploaded = userData;
+                      BlocProvider.of<RegisterBabBloc>(context)
+                          .add(TabChange(2));
                     }
                   })),
-          getCube(5, context),
+          getCube(10, context),
         ],
       ),
     );

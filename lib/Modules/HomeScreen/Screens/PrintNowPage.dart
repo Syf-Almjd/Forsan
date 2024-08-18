@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
@@ -190,10 +189,12 @@ class printNowPageState extends State<printNowPage> {
                 width: getWidth(90, context),
                 child: textFieldA(
                     internalPadding: 30,
+                    maxLines: 20,
                     textAlign: TextAlign.center,
                     controller: moreRequirement,
                     hintText: "اذكر لنا تفاصيل أخرى للطباعة التي تريدها "),
               ),
+              getCube(4, context),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -238,29 +239,34 @@ class printNowPageState extends State<printNowPage> {
     );
   }
 
-  void checkUserInput(generatedCode) {
-    if (changePassBtn && discountText.text != "طالب") {
-      showToast("لا يوجد هذا الخصم", SnackBarType.fail, context);
-    }
+  Future<void> checkUserInput(String generatedCode) async {
+    // if (changePassBtn && discountText.text != "طالب") {
+    //   showToast("لا يوجد هذا الخصم", SnackBarType.fail, context);
+    // }
     if (orderList.values.length != 4 || fileName == "") {
       showToast("يرجى ان تكمل كل الخيارات", SnackBarType.fail, context);
     } else {
+      var user = await AppCubit.get(context).getLocalUserData();
+
       OrderModel submittedOrder = OrderModel(
-        orderId: generatedCode,
+        orderId: generatedCode.toUpperCase(),
         orderFile: "",
         orderTitle: widget.title,
         orderPrice: "",
+        orderUser: user.userID,
+        orderUserName: user.name,
+        orderDiscount: changePassBtn ? 'المستخدم لديه كود "$discountText"' : "",
         orderColor: orderList["اللون"].toString(),
         orderSize: orderList["الحجم"].toString(),
         orderPadding: orderList["الوجه"].toString(),
         orderPaper: orderList["النوع للورق"].toString(),
         orderStatus: "لم يدفع",
         orderDescription: moreRequirement.text,
-        orderUser: FirebaseAuth.instance.currentUser!.uid,
         orderType: 'printing',
+        orderDate: DateTime.now().toUtc().toString(),
       );
-      AppCubit.get(context).uploadUserOrders(submittedOrder, context);
-      AppCubit.get(context).uploadUserFiles(FILEuploded, submittedOrder);
+      await AppCubit.get(context)
+          .uploadFullOrder(submittedOrder, FILEuploded, context);
     }
   }
 

@@ -30,9 +30,7 @@ class _profilePageState extends State<profilePage> {
     UserModel userData = UserModel.fromJson(
         await AppCubit.get(context).getSharedMap('currentuser'));
     if (userData.photoID == "NO_PHOTO") {
-      setState(() {
-        currentUser.photoID = UserModel.loadingUser().photoID;
-      });
+      currentUser.photoID = UserModel.loadingUser().photoID;
     }
     setState(() {
       currentUser = userData;
@@ -62,7 +60,7 @@ class _profilePageState extends State<profilePage> {
                 child: InkWell(
                     onTap: () {
                       NaviCubit.get(context).navigate(
-                          context, settingsPage(currentUser: currentUser));
+                          context, SettingsPage(currentUser: currentUser));
                     },
                     child: previewImage(currentUser.photoID, context)),
               ),
@@ -108,7 +106,7 @@ class _profilePageState extends State<profilePage> {
                       onPress: () {
                         NaviCubit.get(context).navigate(
                             context,
-                            settingsPage(
+                            SettingsPage(
                               currentUser: currentUser,
                             ));
                       }),
@@ -133,7 +131,7 @@ class _profilePageState extends State<profilePage> {
                       icon: Icons.info,
                       onPress: () {
                         NaviCubit.get(context)
-                            .navigate(context, ContactUsPage());
+                            .navigate(context, const ContactUsPage());
                       }),
                   ProfileMenuWidget(
                       title: "تقييم البرنامج",

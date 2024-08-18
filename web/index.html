@@ -2,58 +2,94 @@
 <html>
 <head>
   <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
+  If you are serving your web app in a path other than the root, change the
+  href value below to reflect the base path you are serving from.
 
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
+  The path provided below has to start and end with a slash "/" in order for
+  it to work correctly.
 
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+  Fore more details:
+  * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+-->
+  <!-- <base href="/"> -->
+  <base href="$FLUTTER_BASE_HREF" />
 
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="$FLUTTER_BASE_HREF">
-
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Printer App">
+  <meta charset="UTF-8" />
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+  <meta name="Forsan Printing" content="A Website for Forsan Printing Services" />
 
   <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="forsan">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="Forsan Printing" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
-  <title>forsan</title>
-  <link rel="manifest" href="manifest.json">
+  <title>Forsan Printing</title>
+  <link rel="manifest" href="manifest.json" />
+  <!-- Styling for loading indicator -->
+  <style>
+    /* General Container Styling */
+.container {
+  margin: 0;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = null;
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
-</head>
+/* Loading Text Styling */
+.loading-text {
+  font-size: 1em; /* Adjusted to 1em for consistency */
+  color: #808080; /* Gray color */
+  font-family: 'Poppins', sans-serif; /* Modern sans-serif font */
+  font-weight: 600; /* Updated to numerical weight for clarity */
+  text-align: center; /* Centering the text horizontally */
+}
+
+/* Loader Styling */
+.loader {
+  height: 30vh; /* 30% of viewport height */
+  display: flex; /* Ensures loader is centered vertically */
+  justify-content: center; /* Centers the loader */
+  align-items: center; /* Aligns items within the loader */
+}
+
+  </style>
 <body>
-  <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
+<!-- Loading Indicator -->
+
+<body style="overflow: hidden">
+<div id="load" class="container">
+  <div class="loader-wrapper">
+    <img class="loader" src="assets/loading.gif" alt="Loading">
+    <p class="loading-text">...قيد التحميل</p>
+  </div>
+</div><!-- This script installs service_worker.js to provide PWA functionality to
+   application. For more information, see:
+   https://developers.google.com/web/fundamentals/primers/service-workers -->
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("flutter-first-frame", function () {
+      navigator.serviceWorker.register("flutter_service_worker.js");
     });
-  </script>
+  }
+</script>
+<script src="main.dart.js" type="application/javascript"></script>
+<!-- Removes the loading indicator after 10 seconds -->
+<script>
+  window.onload = function () {
+    setTimeout(function () {
+      var loadingIndicator = document.getElementById("loading_container");
+      if (loadingIndicator) {
+        loadingIndicator.remove();
+      }
+    }, 10000);
+  };
+</script>
 </body>
 </html>

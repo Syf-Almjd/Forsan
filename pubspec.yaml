@@ -1,7 +1,7 @@
 name: forsan
 description: A Printing Service APP.
 
-version: 1.0.0+12
+version: 1.0.0+13
 
 environment:
   sdk: '>=3.0.1 <4.0.0'
@@ -11,12 +11,18 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.5
   hexcolor: ^3.0.1
-  cloud_firestore: ^4.8.4
-  firebase_auth: ^4.7.2
-  firebase_core: ^2.15.0
+#  cloud_firestore: ^4.8.4
+#  firebase_auth: ^4.7.2
+#  firebase_core: ^2.15.0
+#  firebase_core: ^2.25.4
+  cloud_functions: ^4.6.0
+  firebase_auth: ^4.17.5
+  cloud_firestore: ^4.15.5
+  firebase_storage: ^11.2.6
+
   flutter_bloc: ^8.1.3
   google_fonts: ^4.0.4
-  firebase_storage: ^11.2.5
+#  firebase_storage: ^11.2.5
   loading_animation_widget: ^1.2.0+4
   animated_bottom_navigation_bar: ^1.2.0
 #  awesome_snackbar_content: ^0.1.3
@@ -28,7 +34,9 @@ dependencies:
   dart_secure: 0.5.25
   image_picker: ^1.0.4
   moyasar: ^2.0.2
-
+  cached_network_image: ^3.4.0
+  firebase_core: ^2.31.0
+#  cached_network_image_web: ^1.3.1 # Replace with a compatible version if available
 
 dev_dependencies:
   device_preview: ^1.1.0
@@ -66,3 +74,4 @@ flutter:
     - assets/print.gif
     - assets/printingGif.gif
     - assets/profilePicture.jpg
+    - shorebird.yaml

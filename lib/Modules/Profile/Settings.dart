@@ -11,15 +11,15 @@ import 'package:image_picker/image_picker.dart';
 import '../../Cubit/Navigation/navi_cubit.dart';
 import '../../Models/UserModel.dart';
 
-class settingsPage extends StatefulWidget {
+class SettingsPage extends StatefulWidget {
   final UserModel currentUser;
-  const settingsPage({Key? key, required this.currentUser}) : super(key: key);
+  const SettingsPage({Key? key, required this.currentUser}) : super(key: key);
 
   @override
-  State<settingsPage> createState() => _settingsPageState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _settingsPageState extends State<settingsPage> {
+class _SettingsPageState extends State<SettingsPage> {
   bool _isObscure = true;
   bool changePassBtn = false;
   String? _imageBytes;
@@ -27,7 +27,7 @@ class _settingsPageState extends State<settingsPage> {
 
   late UserModel userData;
   TextEditingController name = TextEditingController();
-  TextEditingController email = TextEditingController();
+  // TextEditingController email = TextEditingController();
   TextEditingController newPass = TextEditingController();
   TextEditingController address = TextEditingController();
   TextEditingController phoneNumber = TextEditingController();
@@ -96,21 +96,21 @@ class _settingsPageState extends State<settingsPage> {
                   const SizedBox(
                     height: 20,
                   ),
-                  TextFormField(
-                    controller: email,
-                    decoration: InputDecoration(
-                      labelText: widget.currentUser.email,
-                      prefixIcon: const Icon(Icons.email_outlined),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        email.text = widget.currentUser.email;
-                        return null;
-                      }
-                      return null;
-                    },
-                  ),
+                  // TextFormField(
+                  //   controller: email,
+                  //   decoration: InputDecoration(
+                  //     labelText: widget.currentUser.email,
+                  //     prefixIcon: const Icon(Icons.email_outlined),
+                  //   ),
+                  //   keyboardType: TextInputType.emailAddress,
+                  //   validator: (value) {
+                  //     if (value!.isEmpty) {
+                  //       email.text = widget.currentUser.email;
+                  //       return null;
+                  //     }
+                  //     return null;
+                  //   },
+                  // ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -194,14 +194,18 @@ class _settingsPageState extends State<settingsPage> {
               ),
             ),
           ),
-          loadButton(
-              textSize: getWidth(5, context),
-              textColor: Colors.black,
-              buttonElevation: 2.0,
-              onPressed: () {
-                checkUserInput();
-              },
-              buttonText: "تعديل"),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40.0),
+            child: loadButton(
+                textSize: getWidth(5, context),
+                textColor: Colors.black,
+                buttonElevation: 2.0,
+                buttonWidth: getWidth(50, context),
+                onPressed: () {
+                  checkUserInput();
+                },
+                buttonText: "تعديل"),
+          ),
           const SizedBox(
             height: 40,
           ),
@@ -210,7 +214,7 @@ class _settingsPageState extends State<settingsPage> {
     );
   }
 
-  void checkUserInput() {
+  Future<void> checkUserInput() async {
     if (validateForm(textForm)) {
       if (name.text.isEmpty) {}
       if (address.text.isEmpty) {
@@ -219,16 +223,16 @@ class _settingsPageState extends State<settingsPage> {
       if (phoneNumber.text.isEmpty) {
         phoneNumber.text = widget.currentUser.phoneNumber;
       }
-      if (email.text.isEmpty) {
-        email.text = widget.currentUser.email;
-      }
+      // if (email.text.isEmpty) {
+      //   email.text = widget.currentUser.email;
+      // }
       if (changePassBtn == true &&
           (newPass.text.isEmpty || newPass.text.length <= 4)) {
         widget.currentUser.password = newPass.text;
         AppCubit.get(context).changePassword(newPass.text);
       }
       userData = UserModel(
-          email: email.text,
+          email: widget.currentUser.email,
           password: widget.currentUser.password,
           name: name.text,
           address: address.text,
@@ -236,8 +240,8 @@ class _settingsPageState extends State<settingsPage> {
           phoneNumber: phoneNumber.text,
           photoID: _imageBytes ?? widget.currentUser.photoID,
           userID: FirebaseAuth.instance.currentUser!.uid);
-      AppCubit.get(context).updateUserFBData(userData, context);
-      NaviCubit.get(context).navigateToHome(context);
+      await AppCubit.get(context).updateUserFBData(userData, context);
+      NaviCubit.get(context).pop(context);
     }
   }
 

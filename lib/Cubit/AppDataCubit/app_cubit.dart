@@ -7,11 +7,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
+import 'package:forsan/Models/UserContactModel.dart';
 import 'package:forsan/Models/UserModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Components/ChooseWidget.dart';
 import '../../Models/OrderModel.dart';
 import '../../Models/ProductModel.dart';
+import '../BaB BloC/ba_b_bloc.dart';
 
 part 'app_state.dart';
 
@@ -58,31 +61,79 @@ class AppCubit extends Cubit<AppStates> {
     return firebaseCData;
   }
 
-  Future<void> uploadUserOrders(OrderModel order, context) async {
+  uploadFullOrder(OrderModel orderModel, file, context) async {
+    try {
+      showLoadingDialog(context);
+      await uploadUserOrders(orderModel, context);
+      // await uploadToAllOrders(orderModel, context);
+      await uploadUserFiles(file, orderModel, context);
+      NaviCubit.get(context).pop(context, forced: true);
+      NaviCubit.get(context).pop(context);
+      BlocProvider.of<BaBBloc>(context).add(TabChange(1));
+      emit(GetDataSuccessful());
+    } catch (e) {
+      NaviCubit.get(context).pop(context);
+
+      emit(GetDataError());
+    }
+  }
+
+  // Future<void> uploadToAllOrders(OrderModel order, context) async {
+  //   try {
+  //     emit(GettingData());
+  //     var firebaseDocRef = await FirebaseFirestore.instance
+  //         .collection('orders')
+  //         .doc("users_all_orders");
+  //     await firebaseDocRef.set({"updated": DateTime.now().toUtc()});
+  //
+  //     await firebaseDocRef
+  //         .collection('users_all_orders')
+  //         .doc(order.orderDate)
+  //         .set(order.toJson());
+  //
+  //     // IconSnackBar.show(context,
+  //     //     snackBarType: SnackBarType.success, label: "يتم الآن معالجة طلبك...");
+  //     emit(GetDataSuccessful());
+  //   } catch (e) {
+  //     // IconSnackBar.show(context,
+  //     //     snackBarType: SnackBarType.success, label: 'حاول مرة أخرى');
+  //
+  //     emit(GetDataError());
+  //   }
+  // }
+
+  Future<void> sendUserContactMessage(UserContactModel contactModel) async {
     try {
       emit(GettingData());
       await FirebaseFirestore.instance
-          .collection('orders')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .set({"updated": DateTime.now()});
-
-      FirebaseFirestore.instance
-          .collection('orders')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('userOrders')
-          .doc(order.orderId)
-          .set(order.toJson());
-      IconSnackBar.show(
-          context: context,
-          snackBarType: SnackBarType.save,
-          label: 'تم الاضافة للسلة ');
+          .collection('contacts')
+          .doc(contactModel.timestamp.toString())
+          .set(contactModel.toJson());
       emit(GetDataSuccessful());
     } catch (e) {
       emit(GetDataError());
-      IconSnackBar.show(
-          context: context,
-          snackBarType: SnackBarType.save,
-          label: 'حاول مرة أخرى');
+    }
+  }
+
+  Future<void> uploadUserOrders(OrderModel order, context) async {
+    try {
+      emit(GettingData());
+      var firebaseDocRef = FirebaseFirestore.instance
+          .collection('orders')
+          .doc(FirebaseAuth.instance.currentUser?.uid);
+      await firebaseDocRef.set({"updated": DateTime.now()});
+
+      await firebaseDocRef
+          .collection('userOrders')
+          .doc(order.orderId)
+          .set(order.toJson());
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.success, label: "يتم ارسال طلبك...");
+      emit(GetDataSuccessful());
+    } catch (e) {
+      emit(GetDataError());
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.success, label: 'حاول مرة أخرى');
     }
   }
 
@@ -106,10 +157,29 @@ class AppCubit extends Cubit<AppStates> {
       return NaviCubit.get(context).navigateToHome(context);
     } catch (e) {
       emit(GetDataError());
-      IconSnackBar.show(
-          context: context,
-          snackBarType: SnackBarType.save,
-          label: 'حاول مرة أخرى');
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.success, label: 'حاول مرة أخرى');
+    }
+  }
+
+  Future<List<OrderModel>> getHistoryOrdersData() async {
+    emit(GettingData());
+    List<OrderModel> orderDataList = [];
+
+    var collection = await FirebaseFirestore.instance
+        .collection("orders")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection('finishedOrders')
+        .get();
+    for (var doc in collection.docs) {
+      orderDataList.add(OrderModel.fromJson(doc.data()));
+    }
+    if (orderDataList.isNotEmpty) {
+      emit(GetDataSuccessful());
+      return orderDataList;
+    } else {
+      emit(GetDataError());
+      return orderDataList;
     }
   }
 
@@ -159,31 +229,85 @@ class AppCubit extends Cubit<AppStates> {
   Future<void> deleteUserOrders(OrderModel order, context) async {
     try {
       emit(GettingData());
-      FirebaseFirestore.instance
-          .collection('orders')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('userOrders')
-          .doc(order.orderId)
-          .delete();
-      IconSnackBar.show(
-          context: context,
-          snackBarType: SnackBarType.save,
-          label: 'تم اللغاء للطلب ');
-      emit(GetDataSuccessful());
+
+      // Parse the order date and convert it to UTC
+      final DateTime orderDate = DateTime.parse(order.orderDate).toUtc();
+
+      // Get the current UTC time
+      final DateTime currentTime = DateTime.now().toUtc();
+
+      // Check if the current time is within 5 minutes of the order date
+      if (currentTime.isBefore(orderDate.add(const Duration(minutes: 5)))) {
+        // Proceed with deleting the order
+        try {
+          await FirebaseStorage.instance.refFromURL(order.orderFile).delete();
+        } catch (e) {
+          // Handle the specific error for deleting the order file
+          print("Error deleting order file: $e");
+        }
+
+        try {
+          await FirebaseFirestore.instance
+              .collection('orders')
+              .doc(order.orderUser)
+              .collection('finishedOrders')
+              .doc(order.orderId)
+              .delete();
+        } catch (e) {
+          // Handle the specific error for deleting the finished order
+          print("Error deleting finished order: $e");
+        }
+
+        try {
+          await FirebaseFirestore.instance
+              .collection('orders')
+              .doc(FirebaseAuth.instance.currentUser?.uid)
+              .collection('userOrders')
+              .doc(order.orderId)
+              .delete();
+          IconSnackBar.show(
+            context,
+            snackBarType: SnackBarType.success,
+            label: 'تم إلغاء الطلب بنجاح',
+          );
+        } catch (e) {
+          // Handle the specific error for deleting the user order
+          print("Error deleting user order: $e");
+          IconSnackBar.show(
+            context,
+            snackBarType: SnackBarType.fail,
+            label: 'حدث خطأ أثناء محاولة إلغاء الطلب',
+          );
+        }
+      } else {
+        IconSnackBar.show(
+          context,
+          snackBarType: SnackBarType.fail,
+          label:
+              'لا يمكن إلغاء الطلب بعد مرور 5 دقائق \n الرجاء الاتصال بفرسان',
+        );
+      }
     } catch (e) {
-      emit(GetDataError());
+      // Handle any other errors that might occur
+      print("Unexpected error: $e");
       IconSnackBar.show(
-          context: context,
-          snackBarType: SnackBarType.save,
-          label: 'حاول مرة أخرى');
+        context,
+        snackBarType: SnackBarType.fail,
+        label: 'حدث خطأ أثناء محاولة إلغاء الطلب',
+      );
     }
   }
 
-  Future<void> uploadUserFiles(userFile, OrderModel order) async {
+  Future<void> uploadUserFiles(userFile, OrderModel order, context) async {
     emit(GettingData());
+    IconSnackBar.show(context,
+        snackBarType: SnackBarType.success, label: "يتم الآن معالجة طلبك...");
+
     var path = '/userOrderFiles/${userFile.name}';
     final file = File(userFile.path);
     final ref = FirebaseStorage.instance.ref().child(path);
+    IconSnackBar.show(context,
+        snackBarType: SnackBarType.success, label: "تم تحميل الملف...");
 
     try {
       var uploadTask = await ref.putFile(file);
@@ -194,14 +318,20 @@ class AppCubit extends Cubit<AppStates> {
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection("userOrders")
           .doc(order.orderId);
+      // IconSnackBar.show(context,
+      //     snackBarType: SnackBarType.success,
+      //     label: "نجحت معالجة ورفع الملف... ");
 
       await docRef.update({'orderFile': getFileLink});
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.success,
+          label: "🤗 يتم الان تجهيز طلبك...");
+
       emit(GetDataSuccessful());
     } catch (error) {
-      print(error);
       attempts++;
       if (attempts < 3) {
-        await uploadUserFiles(userFile, order); // Retry the upload
+        await uploadUserFiles(userFile, order, context); // Retry the upload
       } else {
         emit(GetDataError());
       }
@@ -215,18 +345,14 @@ class AppCubit extends Cubit<AppStates> {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: mail, password: pwd);
 
-      IconSnackBar.show(
-          context: context,
-          snackBarType: SnackBarType.save,
-          label: 'نجح تسجيل الدخول ');
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.success, label: 'نجح تسجيل الدخول ');
       emit(GetDataSuccessful());
       NaviCubit.get(context).navigateToHome(context);
     } on FirebaseAuthException {
       emit(GetDataError());
-      IconSnackBar.show(
-          context: context,
-          snackBarType: SnackBarType.fail,
-          label: '!اعد المحاولة');
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.fail, label: '!اعد المحاولة');
     }
   }
 
@@ -241,23 +367,19 @@ class AppCubit extends Cubit<AppStates> {
       await clearSharedAll();
       await saveSharedMap('currentuser', userModel.toJson());
       NaviCubit.get(context).pop(context);
-      IconSnackBar.show(
-          context: context,
-          snackBarType: SnackBarType.save,
-          label: 'نجح تحديث المعلومات ');
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.success, label: 'نجح تحديث المعلومات ');
       emit(GetDataSuccessful());
     } on FirebaseAuthException {
-      IconSnackBar.show(
-          context: context,
-          snackBarType: SnackBarType.fail,
-          label: '!اعد المحاولة');
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.fail, label: '!اعد المحاولة');
       emit(GetDataError());
     }
   }
 
   Future<bool> changePassword(String newPassword) async {
     try {
-      var user = await FirebaseAuth.instance.currentUser;
+      var user = FirebaseAuth.instance.currentUser;
       await user?.updatePassword(newPassword);
       return true;
     } catch (e) {
@@ -279,18 +401,17 @@ class AppCubit extends Cubit<AppStates> {
           .doc(userModel.userID)
           .set(userModel.toJson());
 
-      IconSnackBar.show(
-          context: context,
-          snackBarType: SnackBarType.save,
-          label: 'نجح تسجيل الدخول ');
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.success, label: 'نجح تسجيل الدخول ');
 
       emit(GetDataSuccessful());
       NaviCubit.get(context).navigateToHome(context);
-    } on FirebaseAuthException {
-      IconSnackBar.show(
-          context: context,
-          snackBarType: SnackBarType.fail,
-          label: '!اعد المحاولة');
+    } on FirebaseAuthException catch (e) {
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.fail, label: '!اعد المحاولة');
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.fail, label: e.message.toString());
+
       emit(GetDataError());
     }
   }
@@ -304,6 +425,17 @@ class AppCubit extends Cubit<AppStates> {
       emit(LocalDataSuccessful());
     } catch (e) {
       emit(LocalDataFailed());
+    }
+  }
+
+  Future<UserModel> getLocalUserData() async {
+    emit(UpdatingLocalData());
+    try {
+      emit(LocalDataSuccessful());
+      return UserModel.fromJson(await getSharedMap('currentuser'));
+    } catch (e) {
+      emit(LocalDataFailed());
+      return getUserData();
     }
   }
 

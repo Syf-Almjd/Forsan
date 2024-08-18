@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:forsan/Components/ChooseWidget.dart';
 import 'package:forsan/Components/Components.dart';
 import 'package:forsan/Cubit/AppDataCubit/app_cubit.dart';
-import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
 import 'package:forsan/Models/OrderModel.dart';
 import 'package:forsan/generated/assets.dart';
+
+import '../../Cubit/Navigation/navi_cubit.dart';
 
 class CartList extends StatefulWidget {
   final OrderModel order;
   final Function onTap;
+  final bool isHistory;
 
-  const CartList({super.key, required this.order, required this.onTap});
+  const CartList(
+      {super.key,
+      required this.order,
+      required this.onTap,
+      this.isHistory = false});
 
   @override
   State<CartList> createState() => _CartListState();
@@ -96,27 +103,35 @@ class _CartListState extends State<CartList> {
                         ),
                 ),
               ),
-              Positioned(
-                bottom: 1,
-                left: 1,
-                child: InkWell(
-                    onTap: () {
-                      AppCubit.get(context)
-                          .deleteUserOrders(widget.order, context);
-                      NaviCubit.get(context).navigateToHome(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.delete_outline_outlined,
-                            color: Colors.red.withOpacity(0.9),
-                          ),
-                          // const Text("الغاء الطلب", style: TextStyle(color: Colors.red),),
-                        ],
-                      ),
-                    )),
+              Visibility(
+                visible: !widget.isHistory,
+                child: Positioned(
+                  bottom: 1,
+                  left: 1,
+                  child: InkWell(
+                      onTap: () async {
+                        showLoadingDialog(context);
+                        await AppCubit.get(context)
+                            .deleteUserOrders(widget.order, context)
+                            .then(
+                          (value) {
+                            NaviCubit.get(context).pop(context, forced: true);
+                          },
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.delete_outline_outlined,
+                              color: Colors.red.withOpacity(0.9),
+                            ),
+                            // const Text("الغاء الطلب", style: TextStyle(color: Colors.red),),
+                          ],
+                        ),
+                      )),
+                ),
               ),
               Positioned(
                   top: 20,

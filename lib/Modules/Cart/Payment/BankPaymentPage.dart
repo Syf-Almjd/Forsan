@@ -124,7 +124,7 @@ class BankPaymentPage extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () async {
-                      showToast("تم النسخ", SnackBarType.save, context);
+                      showToast("تم النسخ", SnackBarType.success, context);
                       await Clipboard.setData(
                           ClipboardData(text: order.orderId));
                     },
@@ -177,7 +177,7 @@ class BankPaymentPage extends StatelessWidget {
                       InkWell(
                         onTap: () async {
                           showToast("تم نسخ اسم الحساب إلى حافظة جهازك",
-                              SnackBarType.save, context);
+                              SnackBarType.success, context);
                           await Clipboard.setData(
                               const ClipboardData(text: "سيف المجد موقت"));
                         },
@@ -211,7 +211,7 @@ class BankPaymentPage extends StatelessWidget {
                       InkWell(
                         onTap: () async {
                           showToast("تم نسخ رقم الحساب إلى حافظة جهازك",
-                              SnackBarType.save, context);
+                              SnackBarType.success, context);
                           await Clipboard.setData(
                               const ClipboardData(text: "171576378096"));
                         },
@@ -245,7 +245,7 @@ class BankPaymentPage extends StatelessWidget {
                       InkWell(
                         onTap: () async {
                           showToast("تم نسخ اسم البنك إلى حافظة جهازك",
-                              SnackBarType.save, context);
+                              SnackBarType.success, context);
                           await Clipboard.setData(
                               const ClipboardData(text: "بنك الراجحي"));
                         },

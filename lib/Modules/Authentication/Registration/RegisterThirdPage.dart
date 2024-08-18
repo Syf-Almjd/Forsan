@@ -120,7 +120,7 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
                     showToast('اختر صورة', SnackBarType.fail, context);
                   }
                 })),
-        getCube(5, context),
+        getCube(10, context),
       ],
     );
   }

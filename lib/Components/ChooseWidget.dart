@@ -57,6 +57,7 @@ class _ChooseItemWidgetState extends State<ChooseItemWidget> {
       // print(userChoice);
     });
   }
+
   // String FinalChoice(){
   //  List data=[];
   //   userChoice.forEach((key, value) {
@@ -112,5 +113,29 @@ class _ChooseItemWidgetState extends State<ChooseItemWidget> {
       },
     );
   }
+}
 
+void showLoadingDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false, // Prevents closing the dialog by tapping outside
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Text("جاري التحميل..."),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,6 +66,7 @@ Widget textFieldA({
   required TextEditingController controller,
   required String hintText,
   bool? obscureText = false, //optional
+  int maxLines = 5, //optional
   TextAlign textAlign = TextAlign.start, //optional
   Icon? prefixIcon,
   double? internalPadding,
@@ -77,6 +79,7 @@ Widget textFieldA({
     obscureText: obscureText ?? false,
     cursorColor: HexColor("#4f4f4f"),
     textAlign: textAlign,
+    maxLines: maxLines,
     decoration: InputDecoration(
       hintText: hintText,
       fillColor: HexColor("#f2f3ff"),
@@ -233,19 +236,18 @@ Widget rowHomeItems({
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: Image.network(
-                        img,
+                      child: CachedNetworkImage(
+                        imageUrl: img,
                         fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          return loadingProgress != null
-                              ? Center(
-                                  child: LoadingAnimationWidget.flickr(
-                                      leftDotColor: Colors.blue,
-                                      rightDotColor: Colors.yellow,
-                                      size: 30))
-                              : child;
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) {
+                          return Center(
+                              child: LoadingAnimationWidget.flickr(
+                                  leftDotColor: Colors.blue,
+                                  rightDotColor: Colors.yellow,
+                                  size: 30));
                         },
-                        errorBuilder: (context, error, stackTrace) {
+                        errorWidget: (context, url, error) {
                           return const SizedBox.shrink();
                         },
                       ),
@@ -278,19 +280,17 @@ Widget socialMediaItem({
         height: 50,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(50),
-          child: Image.network(
-            img,
+          child: CachedNetworkImage(
+            imageUrl: img,
             fit: BoxFit.contain,
-            loadingBuilder: (context, child, loadingProgress) {
-              return loadingProgress != null
-                  ? Center(
-                      child: LoadingAnimationWidget.flickr(
-                          leftDotColor: Colors.blue,
-                          rightDotColor: Colors.yellow,
-                          size: 30))
-                  : child;
+            progressIndicatorBuilder: (context, url, downloadProgress) {
+              return Center(
+                  child: LoadingAnimationWidget.flickr(
+                      leftDotColor: Colors.blue,
+                      rightDotColor: Colors.yellow,
+                      size: 30));
             },
-            errorBuilder: (context, error, stackTrace) {
+            errorWidget: (context, url, error) {
               return const SizedBox.shrink();
             },
           ),
@@ -307,33 +307,34 @@ Widget loadButton({
   double? buttonWidth,
   Color? textColor,
   double? textSize,
+  bool isLoadButton = true,
   double? buttonElevation,
   required Function() onPressed,
   required String buttonText,
 }) {
   return BlocBuilder<AppCubit, AppStates>(builder: (context, state) {
-    if (state is GettingData) {
+    if (state is GettingData && isLoadButton) {
       return loadingAnimation(
           loadingType: LoadingAnimationWidget.beat(
               color: Colors.yellow, size: getWidth(10, context)));
     } else {
-      return Container(
-        width: buttonWidth ?? getWidth(80, context),
-        height: buttonHeight ?? 60.0,
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
+      return GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.amber,
+            borderRadius: BorderRadius.all(
+              Radius.circular(20.0),
             ),
-            elevation: buttonElevation ?? 10.0,
           ),
-          onPressed: onPressed,
-          child: Text(
-            buttonText,
-            style: TextStyle(
-                fontSize: textSize ?? getWidth(10, context),
-                color: textColor ?? Colors.white),
+          width: buttonWidth ?? getWidth(80, context),
+          height: buttonHeight ?? 60.0,
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Center(
+            child: Text(
+              buttonText,
+              style: TextStyle(fontSize: 18, color: textColor ?? Colors.white),
+            ),
           ),
         ),
       );
@@ -342,7 +343,7 @@ Widget loadButton({
 }
 
 void showToast(String text, SnackBarType type, context) => IconSnackBar.show(
-      context: context,
+      context,
       snackBarType: type,
       label: text,
     );
@@ -504,7 +505,7 @@ Widget previewImage(
 }
 
 void showToast2(String text, asd, context) => IconSnackBar.show(
-      context: context,
+      context,
       snackBarType: asd as SnackBarType,
       label: text,
     );

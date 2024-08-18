@@ -19,11 +19,15 @@ class homePage extends StatefulWidget {
   homePageState createState() => homePageState();
 }
 
-class homePageState extends State<homePage> {
+class homePageState extends State<homePage> with AutomaticKeepAliveClientMixin {
   TextEditingController searchTF = TextEditingController();
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
@@ -45,7 +49,8 @@ class homePageState extends State<homePage> {
                         Expanded(
                           child: InkWell(
                             onTap: () {
-                              NaviCubit.get(context).navigate(context, ContactUsPage());
+                              NaviCubit.get(context)
+                                  .navigate(context, ContactUsPage());
                             },
                             child: Column(
                               children: [
@@ -278,9 +283,11 @@ class homePageState extends State<homePage> {
                             itemBuilder: (context, index) {
                               return rowHomeItems(
                                 name: studentServicesList[index],
-                                img: studentServiceImgs[index], onTap: (title){
-                                NaviCubit.get(context).navigate(context, printNowPage(title));
-                              },
+                                img: studentServiceImgs[index],
+                                onTap: (title) {
+                                  NaviCubit.get(context)
+                                      .navigate(context, printNowPage(title));
+                                },
                               );
                             }),
                       ),
@@ -318,9 +325,11 @@ class homePageState extends State<homePage> {
                                   studentServiceImgs.reversed.toList();
                               return rowHomeItems(
                                 name: advServicesList[index],
-                                img: advList[index], onTap: (title){
-                                  NaviCubit.get(context).navigate(context, otherServices(title));
-                              },
+                                img: advList[index],
+                                onTap: (title) {
+                                  NaviCubit.get(context)
+                                      .navigate(context, otherServices(title));
+                                },
                               );
                             }),
                       ),
@@ -333,7 +342,6 @@ class homePageState extends State<homePage> {
                       alignment: Alignment.centerRight,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
-
                         children: [
                           //for FUTURE Implementation
                           // Text( /
@@ -369,9 +377,11 @@ class homePageState extends State<homePage> {
                             itemBuilder: (context, index) {
                               return rowHomeItems(
                                 name: moreServicesList[index],
-                                img: moreServiceImge[index],  onTap: (title){
-                                NaviCubit.get(context).navigate(context, otherServices(title));
-                              },
+                                img: moreServiceImge[index],
+                                onTap: (title) {
+                                  NaviCubit.get(context)
+                                      .navigate(context, otherServices(title));
+                                },
                               );
                             }),
                       ),
@@ -387,7 +397,10 @@ class homePageState extends State<homePage> {
                           textAlign: TextAlign.center,
                         ),
                         InkWell(
-                          onTap: (){NaviCubit.get(context).navigate(context, ContactUsPage());},
+                          onTap: () {
+                            NaviCubit.get(context)
+                                .navigate(context, ContactUsPage());
+                          },
                           child: Text(
                             "الاتصال بنا",
                             style: fontAlmarai(size: 8, textColor: Colors.blue),
@@ -409,12 +422,12 @@ class homePageState extends State<homePage> {
                         shrinkWrap: true,
                         itemCount: socialMediaList.length,
                         itemBuilder: (context, index) {
-
                           return socialMediaItem(
-                            index: index,
-                              img: socialMediaList.keys.toList()[index], onTap: (index) {
-                            openUrl(socialMediaList.values.toList()[index]);
-                          });
+                              index: index,
+                              img: socialMediaList.keys.toList()[index],
+                              onTap: (index) {
+                                openUrl(socialMediaList.values.toList()[index]);
+                              });
                         }),
                   ),
                   const SizedBox(
@@ -428,5 +441,4 @@ class homePageState extends State<homePage> {
       ),
     );
   }
-
 }

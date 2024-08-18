@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 
@@ -118,8 +117,8 @@ class _DetailsPageState extends State<DetailsPage> {
                               color: Colors.amberAccent),
                           child: InkWell(
                             onTap: () {
-                              showToast("تمت الاضافة للسلة", SnackBarType.save,
-                                  context);
+                              showToast("تمت الاضافة للسلة",
+                                  SnackBarType.success, context);
                               productItemToOrder(widget.product, generatedCode);
                               NaviCubit.get(context).pop(context);
                             },
@@ -178,7 +177,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         _buildInfoCard(
                             'التقييم', "لا يوجد بعد", 'قم بالشراء لتقييم'),
                         const SizedBox(width: 10.0),
-                        _buildInfoCard('الترشيخ منا', "نعم", 'متوفر في المحل'),
+                        _buildInfoCard('الترشيح منا', "نعم", 'متوفر في المحل'),
                         const SizedBox(width: 10.0),
                         _buildInfoCard('الضمان', "متوفر", 'لمدة 3 ايام'),
                         const SizedBox(width: 10.0),
@@ -256,21 +255,26 @@ class _DetailsPageState extends State<DetailsPage> {
                 ])));
   }
 
-  productItemToOrder(ProductModel productData, generatedCode) {
+  productItemToOrder(ProductModel productData, generatedCode) async {
+    var user = await AppCubit.get(context).getLocalUserData();
+
     var orderData = OrderModel(
         orderId: generatedCode,
-        orderUser: FirebaseAuth.instance.currentUser!.uid,
+        orderUser: user.userID,
+        orderUserName: user.name,
         orderFile: productData.productImgID,
         orderTitle: productData.productTitle,
         orderPrice: productData.productPrice,
         orderColor: "",
+        orderDiscount: "",
         orderSize: "",
         orderPadding: "",
         orderPaper: "",
+        orderDate: DateTime.now().toUtc().toString(),
         orderDescription: productData.productDescription,
         orderStatus: "لم يدفع",
         orderType: 'product');
-    AppCubit.get(context).uploadUserOrders(orderData, context);
+    await AppCubit.get(context).uploadUserOrders(orderData, context);
   }
 
   selectCard(cardTitle) {

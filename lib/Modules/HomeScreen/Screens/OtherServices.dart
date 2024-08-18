@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
@@ -123,6 +122,7 @@ class otherServicesState extends State<otherServices> {
                       buttonText: "ابدا الطلب"),
                 ),
               ),
+              getCube(5, context),
             ],
           ),
         ),
@@ -130,25 +130,29 @@ class otherServicesState extends State<otherServices> {
     );
   }
 
-  void checkUserInput(generatedCode) {
+  Future<void> checkUserInput(String generatedCode) async {
     if (moreRequirement.text.isEmpty) {
       showToast("يرجى ان تكمل التفاصيل للخدمة", SnackBarType.fail, context);
     } else {
+      var user = await AppCubit.get(context).getLocalUserData();
       var submittedOrder = OrderModel(
-          orderId: generatedCode,
+          orderId: generatedCode.toUpperCase(),
           orderFile: "",
-          orderUser: FirebaseAuth.instance.currentUser!.uid,
+          orderUser: user.userID,
           orderTitle: widget.title,
           orderPrice: "",
+          orderUserName: user.name,
           orderStatus: "لم يدفع",
-          orderColor: "service",
-          orderSize: "service",
-          orderPadding: "service",
-          orderPaper: "service",
+          orderColor: "",
+          orderSize: "",
+          orderPadding: "",
+          orderPaper: "",
           orderDescription: moreRequirement.text,
-          orderType: 'printing');
-      AppCubit.get(context).uploadUserOrders(submittedOrder, context);
-      AppCubit.get(context).uploadUserFiles(FILEuploded, submittedOrder);
+          orderType: 'printing',
+          orderDate: DateTime.now().toUtc().toString(),
+          orderDiscount: '');
+      await AppCubit.get(context)
+          .uploadFullOrder(submittedOrder, FILEuploded, context);
     }
   }
 

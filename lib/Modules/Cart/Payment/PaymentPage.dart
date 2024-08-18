@@ -80,7 +80,7 @@ class _PaymentPageState extends State<PaymentPage> {
               onPressed: () {
                 widget.order.orderStatus = "الدفع كاش";
                 AppCubit.get(context).updateUserOrders(widget.order, context);
-                showToast("الدفع كاش", SnackBarType.save, context);
+                showToast("الدفع كاش", SnackBarType.success, context);
                 NaviCubit.get(context).navigateToHome(context);
               },
               child: const Text("الدفع كاش"),

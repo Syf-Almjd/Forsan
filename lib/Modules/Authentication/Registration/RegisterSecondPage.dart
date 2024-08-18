@@ -82,7 +82,7 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                 getCube(2, context),
                 TextFormField(
                   validator: (value) {
-                    if (value!.isEmpty || value.length <= 8) {
+                    if (value!.isEmpty || value.length <= 6) {
                       showToast("كلمة السر ضعيفة!", SnackBarType.fail, context);
                       return 'كلمة السر ضعيفة';
                     } else {
@@ -157,7 +157,7 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                           .add(TabChange(3));
                     }
                   })),
-          getCube(5, context),
+          getCube(10, context),
         ],
       ),
     );

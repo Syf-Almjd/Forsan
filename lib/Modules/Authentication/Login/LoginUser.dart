@@ -20,7 +20,6 @@ class _LoginState extends State<Login> {
   TextEditingController pass = TextEditingController();
   final _validateKey = GlobalKey<FormState>();
 
-
   @override
   void dispose() {
     super.dispose();
@@ -35,7 +34,8 @@ class _LoginState extends State<Login> {
         children: [
           Text(
             "تسجيل الدخول",
-            style: TextStyle(fontSize: getWidth(10, context), fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: getWidth(10, context), fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           getCube(3, context),
@@ -46,8 +46,8 @@ class _LoginState extends State<Login> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty || !value.contains('@')) {
-                      showToast("الايميل غير صحيح!", SnackBarType.fail,
-                          context);
+                      showToast(
+                          "الايميل غير صحيح!", SnackBarType.fail, context);
                       return "الايميل غير صحيح";
                     }
                     return null;
@@ -65,7 +65,8 @@ class _LoginState extends State<Login> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty || value.length <= 4) {
-                      showToast("كلمة المرور الايميل غير صحيحة", SnackBarType.fail, context);
+                      showToast("كلمة المرور الايميل غير صحيحة",
+                          SnackBarType.fail, context);
                       return "كلمة المرور الايميل غير صحيحة";
                     }
                     return null;
@@ -100,10 +101,12 @@ class _LoginState extends State<Login> {
                       textAlign: TextAlign.right,
                     ),
                     onTap: () {
-                      BlocProvider.of<RegisterBabBloc>(context).add(TabChange(1));
+                      BlocProvider.of<RegisterBabBloc>(context)
+                          .add(TabChange(1));
                     },
                   ),
                 ),
+                getCube(10, context),
               ],
             ),
           ),
@@ -115,6 +118,15 @@ class _LoginState extends State<Login> {
                       AppCubit.get(context)
                           .userLogin(email.text, pass.text, context);
                     }
+                  })),
+          getCube(4, context),
+          Center(
+              child: TextButton.icon(
+                  icon: const Icon(Icons.arrow_forward),
+                  label: const Text("تسجيل الدخول كزائر"),
+                  onPressed: () {
+                    AppCubit.get(context)
+                        .userLogin("guest@forsan.com", 'guestlogin', context);
                   })),
         ],
       ),
