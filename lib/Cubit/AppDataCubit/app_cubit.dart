@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:forsan/Components/Components.dart';
 import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
 import 'package:forsan/Models/UserContactModel.dart';
 import 'package:forsan/Models/UserModel.dart';
@@ -14,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../Components/ChooseWidget.dart';
 import '../../Models/OrderModel.dart';
 import '../../Models/ProductModel.dart';
+import '../../Modules/Authentication/Login/LoginUser.dart';
 import '../BaB BloC/ba_b_bloc.dart';
 
 part 'app_state.dart';
@@ -356,6 +358,37 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  Future<void> resetPassword(String email, context) async {
+    emit(GettingData());
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.success,
+          label: 'تم ارسال رابط اعادة تعيين كلمة المرور');
+      emit(GetDataSuccessful());
+      NaviCubit.get(context).navigate(context, const Login());
+    } on FirebaseAuthException catch (e) {
+      emit(GetDataError());
+      String errorMessage;
+
+      switch (e.code) {
+        case 'user-not-found':
+          errorMessage = 'المستخدم غير موجود';
+          break;
+        case 'invalid-email':
+          errorMessage = 'الايميل غير صحيح';
+          break;
+        default:
+          errorMessage = 'حدث خطأ! اعد المحاولة';
+      }
+
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.fail, label: errorMessage);
+    }
+  }
+
   Future<void> updateUserFBData(UserModel userModel, context) async {
     emit(GettingData());
     try {
@@ -406,6 +439,7 @@ class AppCubit extends Cubit<AppStates> {
 
       emit(GetDataSuccessful());
       NaviCubit.get(context).navigateToHome(context);
+      BlocProvider.of<RegisterBabBloc>(context).add(TabChange(0));
     } on FirebaseAuthException catch (e) {
       IconSnackBar.show(context,
           snackBarType: SnackBarType.fail, label: '!اعد المحاولة');
@@ -422,6 +456,9 @@ class AppCubit extends Cubit<AppStates> {
     try {
       var getData = await getUserData();
       saveSharedMap('currentuser', getData.toJson());
+      if (getData.email == "guest@forsan.com") {
+        isGuestMode = true;
+      }
       emit(LocalDataSuccessful());
     } catch (e) {
       emit(LocalDataFailed());

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
 
 import '../../../Components/Components.dart';
 import '../../../Cubit/AppDataCubit/app_cubit.dart';
 import '../../../Cubit/BaB BloC/ba_b_bloc.dart';
+import '../ForgotPasswordPage/forgot_password_page.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -90,23 +92,45 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  alignment: Alignment.centerRight,
-                  child: InkWell(
-                    child: Text(
-                      "لم تسجل بعد؟",
-                      softWrap: true,
-                      style: TextStyle(color: Colors.grey.withOpacity(0.6)),
-                      textAlign: TextAlign.right,
+                getCube(2, context),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        child: Text(
+                          "لم تسجل بعد؟",
+                          softWrap: true,
+                          style: TextStyle(color: Colors.grey.withOpacity(0.6)),
+                          textAlign: TextAlign.right,
+                        ),
+                        onTap: () {
+                          BlocProvider.of<RegisterBabBloc>(context)
+                              .add(TabChange(1));
+                        },
+                      ),
                     ),
-                    onTap: () {
-                      BlocProvider.of<RegisterBabBloc>(context)
-                          .add(TabChange(1));
-                    },
-                  ),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        child: Text(
+                          "نسيت كلمة المرور",
+                          softWrap: true,
+                          style: TextStyle(color: Colors.grey.withOpacity(0.6)),
+                          textAlign: TextAlign.right,
+                        ),
+                        onTap: () {
+                          NaviCubit.get(context)
+                              .navigate(context, const ForgotPasswordPage());
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                getCube(10, context),
+                getCube(5, context),
               ],
             ),
           ),
@@ -122,12 +146,16 @@ class _LoginState extends State<Login> {
           getCube(4, context),
           Center(
               child: TextButton.icon(
+                  iconAlignment: IconAlignment.end,
                   icon: const Icon(Icons.arrow_forward),
-                  label: const Text("تسجيل الدخول كزائر"),
+                  label: const Text("تسجيل الدخول كزائر",
+                      style: TextStyle(color: Colors.black)),
                   onPressed: () {
+                    isGuestMode = true;
                     AppCubit.get(context)
                         .userLogin("guest@forsan.com", 'guestlogin', context);
                   })),
+          getCube(2, context),
         ],
       ),
     );

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forsan/Cubit/AppDataCubit/app_cubit.dart';
 import 'package:forsan/Modules/HomeMain.dart';
 
+import '../../Components/Components.dart';
 import '../BaB BloC/ba_b_bloc.dart';
 
 part 'navi_state.dart';
@@ -13,9 +14,23 @@ class NaviCubit extends Cubit<NaviState> {
 
   static NaviCubit get(context) => BlocProvider.of(context);
 
-  void navigate(context, Widget widget) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
-    emit(PagePushed(pageName: widget.toString()));
+  List guestModeWidgets = [HomeMain];
+
+  navigate(context, Widget widget) async {
+    if (isGuestMode &&
+        !guestModeWidgets.contains(widget.runtimeType.toString())) {
+      return showChoiceDialog(
+          context: context,
+          title: "الرجاء التسجيل ",
+          content: "هل تريد تسجيل الدخول؟",
+          onYes: () {
+            navigateToSliderLogout(context);
+          });
+    } else {
+      await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => widget));
+      emit(PagePushed(pageName: widget.toString()));
+    }
   }
 
   void navigateOff(context, Widget widget) {
@@ -37,6 +52,7 @@ class NaviCubit extends Cubit<NaviState> {
   }
 
   void navigateToSliderLogout(context) {
+    isGuestMode = false;
     FirebaseAuth.instance.signOut();
     AppCubit.get(context).clearSharedAll();
     BlocProvider.of<RegisterBabBloc>(context).add(TabChange(0));

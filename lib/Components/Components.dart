@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,9 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../Cubit/AppDataCubit/app_cubit.dart';
+import '../Cubit/Navigation/navi_cubit.dart';
+
+bool isGuestMode = false;
 
 TextStyle fontAlmarai(
     {double? size, Color? textColor, FontWeight? fontWeight}) {
@@ -340,6 +344,55 @@ Widget loadButton({
       );
     }
   });
+}
+
+Future showChoiceDialog(
+    {required BuildContext context,
+    String? title,
+    String? content,
+    bool showCancel = true,
+    String yesText = "Ok",
+    String noText = "Cancel",
+    required Function onYes,
+    Function? onNo}) {
+  return (showCupertinoDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          shadowColor: Colors.white,
+          title: Text(title ?? ""),
+          titleTextStyle: TextStyle(
+            fontSize: getWidth(4, context),
+            fontWeight: FontWeight.w700,
+          ),
+          actionsPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          content: Text(content ?? "هل انت متاكد؟"),
+          actions: [
+            showCancel
+                ? TextButton(
+                    child: Text(noText),
+                    onPressed: () {
+                      NaviCubit.get(context).pop(context);
+                      if (onNo != null) {
+                        onNo();
+                      }
+                    },
+                  )
+                : Container(),
+            TextButton(
+              child: Text(yesText),
+              onPressed: () {
+                NaviCubit.get(context).pop(context);
+                onYes();
+              },
+            ),
+          ],
+        );
+      }));
 }
 
 void showToast(String text, SnackBarType type, context) => IconSnackBar.show(
