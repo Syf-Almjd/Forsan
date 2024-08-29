@@ -150,7 +150,8 @@ class otherServicesState extends State<otherServices> {
           orderDescription: moreRequirement.text,
           orderType: 'printing',
           orderDate: DateTime.now().toUtc().toString(),
-          orderDiscount: '');
+          orderDiscount: '',
+          orderPackaging: '');
       await AppCubit.get(context)
           .uploadFullOrder(submittedOrder, FILEuploded, context);
     }

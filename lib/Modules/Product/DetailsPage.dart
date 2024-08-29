@@ -273,7 +273,8 @@ class _DetailsPageState extends State<DetailsPage> {
         orderDate: DateTime.now().toUtc().toString(),
         orderDescription: productData.productDescription,
         orderStatus: "لم يدفع",
-        orderType: 'product');
+        orderType: 'product',
+        orderPackaging: '');
     await AppCubit.get(context).uploadUserOrders(orderData, context);
   }
 

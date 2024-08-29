@@ -5,11 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
-import 'package:forsan/Models/OrderModel.dart';
 
 import '../../../Components/ChooseWidget.dart';
 import '../../../Components/Components.dart';
 import '../../../Cubit/AppDataCubit/app_cubit.dart';
+import '../../../Models/OrderModel.dart';
 import 'Components.dart';
 
 class printNowPage extends StatefulWidget {
@@ -24,6 +24,9 @@ class printNowPage extends StatefulWidget {
 class printNowPageState extends State<printNowPage> {
   TextEditingController moreRequirement = TextEditingController();
   TextEditingController discountText = TextEditingController();
+  TextEditingController numberOfPapersController =
+      TextEditingController(text: "1");
+  double totalPrice = 0.0;
 
   bool fileUploaded = false;
   var FILEuploded;
@@ -33,7 +36,11 @@ class printNowPageState extends State<printNowPage> {
   var discountCode;
 
   void addItemToOrder(String key, String item) {
-    orderList[key] = (item);
+    setState(() {
+      orderList[key] = (item);
+      totalPrice =
+          calculatePrice(); // Update price whenever an item is selected
+    });
   }
 
   String chars =
@@ -49,9 +56,17 @@ class printNowPageState extends State<printNowPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            "صفحة ${widget.title}",
-            style: fontAlmarai(fontWeight: FontWeight.bold),
+          title: Column(
+            children: [
+              Text(
+                "صفحة ${widget.title}",
+                style: fontAlmarai(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "السعر الإجمالي: ${totalPrice.toStringAsFixed(2)} ريال",
+                style: fontAlmarai(size: getWidth(4, context)),
+              ),
+            ],
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
@@ -178,11 +193,69 @@ class printNowPageState extends State<printNowPage> {
                       'استيكر ابيض مطفي'
                     ],
                     onTap: (selectedItem) {
-                      addItemToOrder("النوع للورق",
-                          selectedItem); // Call the method when an item is selected
+                      addItemToOrder("النوع للورق", selectedItem);
                     },
                     itemPerRow: 3,
                   )),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15, right: 15, top: 15),
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    "عدد الأوراق",
+                    style: fontAlmarai(size: getWidth(7, context)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: getWidth(90, context),
+                height: getHeight(60, context),
+                child: ChooseItemWidget(
+                  itemPerRow: 3,
+                  name: const [
+                    'سلك حديد',
+                    'سلك بلاستيك',
+                    'كيس شفاف',
+                    'لصق',
+                    'تدبيس جانبي',
+                    'تدبيس زاوية',
+                    'بدون تغليف وبدون تدبيس',
+                    'التغليف الحراري',
+                  ],
+                  onTap: (selectedItem) {
+                    addItemToOrder("التغليف", selectedItem);
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15, right: 15, top: 15),
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    "عدد الأوراق",
+                    style: fontAlmarai(size: getWidth(7, context)),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: TextField(
+                  textDirection: TextDirection.rtl,
+                  controller: numberOfPapersController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    hintText: "أدخل عدد الأوراق",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      totalPrice = calculatePrice();
+                    });
+                  },
+                ),
+              ),
               getCube(2, context),
               SizedBox(
                 height: getHeight(18, context),
@@ -204,10 +277,21 @@ class printNowPageState extends State<printNowPage> {
                     value: changePassBtn,
                     onChanged: (value) => setState(() {
                       changePassBtn = value;
+                      totalPrice =
+                          calculatePrice(); // Recalculate on discount toggle
                     }),
                   ),
                   const Text('هل لديك كود خصم؟'),
                 ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 20,
+                ),
+                child: Text(
+                  "السعر الإجمالي: ${totalPrice.toStringAsFixed(2)} ريال",
+                  style: fontAlmarai(size: 16, fontWeight: FontWeight.bold),
+                ),
               ),
               if (changePassBtn)
                 Padding(
@@ -218,20 +302,21 @@ class printNowPageState extends State<printNowPage> {
                         labelText: 'استخدم (طالب) لخصم الطلاب',
                         prefixIcon: Icon(Icons.price_change_outlined),
                         suffixIcon: Icon(Icons.price_change_outlined)),
+                    onChanged: (value) => setState(() {
+                      discountCode = value;
+                      totalPrice = calculatePrice();
+                    }),
                   ),
                 ),
-              SizedBox(
-                height: getHeight(10, context),
-                width: getWidth(90, context),
-                child: Center(
-                  child: loadButton(
-                      onPressed: () async {
-                        checkUserInput(generatedCode);
-                      },
-                      buttonText: "ابدا الطلب"),
-                ),
+              getCube(3, context),
+              loadButton(
+                onPressed: () {
+                  checkUserInput(generatedCode);
+                  // showToast(
+                  //     "تم ارسال طلبك بنجاح", SnackBarType.success, context);
+                },
+                buttonText: "اطبع الآن",
               ),
-              getCube(5, context)
             ],
           ),
         ),
@@ -264,38 +349,85 @@ class printNowPageState extends State<printNowPage> {
         orderDescription: moreRequirement.text,
         orderType: 'printing',
         orderDate: DateTime.now().toUtc().toString(),
+        orderPackaging: orderList["التغليف"].toString(),
       );
       await AppCubit.get(context)
           .uploadFullOrder(submittedOrder, FILEuploded, context);
     }
   }
 
-  void _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.media,
-    );
-    if (result != null && result.files.single.path != null) {
-      /// Load result and file details
-      PlatformFile file = result.files.first;
+  double calculatePrice() {
+    double basePrice = 0.0;
 
-      /// normal file
-      setState(() {
-        FILEuploded = file;
-        fileName = file.name;
-        fileUploaded = true;
-        // fileLink = FileLINK;
-      });
-    } else {}
+    // Determine the base price based on selected options
+    if (orderList.containsKey("اللون")) {
+      basePrice += orderList["اللون"] == "ملون" ? 0.40 : 0.10;
+    }
+
+    if (orderList.containsKey("الحجم")) {
+      if (orderList["الحجم"] == "A5 (صغير)" ||
+          orderList["الحجم"] == "A4 (عادي)") {
+        basePrice += 0.00; // No additional cost for A5 and A4
+      } else if (orderList["الحجم"] == "A3 (كبير)") {
+        basePrice += orderList["اللون"] == "ملون"
+            ? 3.00
+            : 1.00; // A3 pricing based on color
+      }
+    }
+
+    if (orderList.containsKey("النوع للورق")) {
+      basePrice += 3.00; // Fixed price for all paper types
+    }
+
+    // Add packaging options
+    if (orderList.containsKey("التغليف")) {
+      switch (orderList["التغليف"]) {
+        case 'سلك حديد':
+          basePrice += 5.00; // Add 2.00 for iron wire
+          break;
+        case 'سلك بلاستيك':
+          basePrice += 5.00; // Add 1.50 for plastic wire
+          break;
+        case 'كيس شفاف':
+          basePrice += 0.50; // Add 1.00 for transparent bag
+          break;
+        case 'لصق':
+          basePrice += 3.00; // Add 0.50 for tape
+          break;
+        case 'تدبيس جانبي':
+          basePrice += 0.00; // Add 0.75 for side stapling
+          break;
+        case 'تدبيس زاوية':
+          basePrice += 0.00; // Add 0.50 for corner stapling
+          break;
+        case 'بدون تغليف وبدون تدبيس':
+          basePrice += 0.00; // No additional cost for no packaging or stapling
+          break;
+        case 'التغليف الحراري':
+          basePrice += 3.00; // Add 3.00 for thermal packaging
+          break;
+      }
+    }
+
+    // Apply discount if applicable
+    // if (discountCode != null && discountCode == "طالب") {
+    //   basePrice *= 0.9; // 10% student discount
+    // }
+
+    // Multiply by the number of papers
+    int numberOfPapers = int.tryParse(numberOfPapersController.text) ?? 1;
+    return basePrice * numberOfPapers;
   }
 
-// void _pickMultipleFiles() async {
-//   FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true);
-//
-//   if (result != null) {
-//     List<File> files = result.paths.map((path) => File(path!)).toList();
-//     print("DONE");
-//   } else {
-//     print("canceled");
-//   }
-// }
+  Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      FILEuploded = result.files.first.bytes;
+      setState(() {
+        fileName = result.files.first.name;
+        fileUploaded = true;
+      });
+    }
+  }
 }

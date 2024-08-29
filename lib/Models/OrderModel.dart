@@ -10,6 +10,7 @@ class OrderModel {
   String orderColor;
   String orderSize;
   String orderPadding;
+  String orderPackaging;
   String orderPaper;
   String orderDescription;
   String orderStatus;
@@ -22,6 +23,7 @@ class OrderModel {
     required this.orderUser,
     required this.orderUserName,
     required this.orderFile,
+    required this.orderPackaging,
     required this.orderTitle,
     required this.orderPrice,
     required this.orderColor,
@@ -45,6 +47,7 @@ class OrderModel {
         orderUserName: json['orderUserName'] ?? "",
         orderPrice: json['orderPrice'] ?? "",
         orderColor: json['orderColor'] ?? "",
+        orderPackaging: json['orderPackaging'] ?? "",
         orderSize: json['orderSize'] ?? "",
         orderPadding: json['orderPadding'] ?? "",
         orderPaper: json['orderPaper'] ?? "",
@@ -68,7 +71,9 @@ class OrderModel {
         orderType: json['orderType'] ?? "",
         orderUser: json['orderUser'] ?? "",
         orderDate: 'هذا الطلب من برنامج قديم',
-        orderDiscount: '', orderUserName: '',
+        orderDiscount: '',
+        orderUserName: '',
+        orderPackaging: '',
       );
     }
   }
@@ -84,6 +89,7 @@ class OrderModel {
       'orderDiscount': orderDiscount,
       'orderColor': orderColor,
       'orderType': orderType,
+      'orderPackaging': orderPackaging,
       'orderSize': orderSize,
       'orderPadding': orderPadding,
       'orderPaper': orderPaper,
