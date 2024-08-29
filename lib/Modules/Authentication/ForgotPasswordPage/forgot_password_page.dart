@@ -67,6 +67,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 return null;
               },
               controller: email,
+              textDirection: TextDirection.rtl,
               decoration: InputDecoration(
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(20)),

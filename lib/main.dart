@@ -15,23 +15,27 @@ import 'Modules/HomeMain.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.amberAccent, // navigation bar color
-    statusBarColor: Colors.amberAccent, // status bar color
-  ));
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-    // DeviceOrientation.landscapeRight,
-    // DeviceOrientation.landscapeLeft,
-  ]);
+  // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+  //   systemNavigationBarColor: Colors.amberAccent, // navigation bar color
+  //   statusBarColor: Colors.amberAccent, // status bar color
+  // ));
+  // SystemChrome.setEnabledSystemUIMode(
+  //   SystemUiMode.manual,
+  //   overlays: [SystemUiOverlay.top],
+  // );
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  //   // DeviceOrientation.landscapeRight,
+  //   // DeviceOrientation.landscapeLeft,
+  // ]);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   // await FirebaseAuth.instance.signInAnonymously();// REMOVE later
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode,
+      enabled: kReleaseMode,
       builder: (context) => const MyApp(), // Wrap your app
     ),
   );
@@ -62,13 +66,30 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Almarai',
+
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            shadowColor: Colors.white,
+            centerTitle: true,
+            titleTextStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          //App Transition
+          pageTransitionsTheme: const PageTransitionsTheme(builders: {
+            TargetPlatform.android: OpenUpwardsPageTransitionsBuilder(),
+            TargetPlatform.iOS: OpenUpwardsPageTransitionsBuilder(),
+          }),
         ).copyWith(
           colorScheme: ThemeData().colorScheme.copyWith(
                 primary: Colors.amberAccent,
               ),
         ),
-        locale: DevicePreview.locale(context),
-        builder: DevicePreview.appBuilder,
+        // locale: DevicePreview.locale(context),
+        // builder: DevicePreview.appBuilder,
         home: const HomeMain(),
       ),
     );

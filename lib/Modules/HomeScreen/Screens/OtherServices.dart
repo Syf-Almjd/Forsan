@@ -172,7 +172,7 @@ class otherServicesState extends State<otherServices> {
         fileUploaded = true;
         // fileLink = FileLINK;
       });
-    } else {}
+    }
   }
 
 // void _pickMultipleFiles() async {

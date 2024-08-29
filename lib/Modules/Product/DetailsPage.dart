@@ -116,11 +116,13 @@ class _DetailsPageState extends State<DetailsPage> {
                               borderRadius: BorderRadius.circular(17.0),
                               color: Colors.amberAccent),
                           child: InkWell(
-                            onTap: () {
+                            onTap: () async {
+                              NaviCubit.get(context).pop(context);
+                              await productItemToOrder(
+                                  widget.product, generatedCode);
+
                               showToast("تمت الاضافة للسلة",
                                   SnackBarType.success, context);
-                              productItemToOrder(widget.product, generatedCode);
-                              NaviCubit.get(context).pop(context);
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

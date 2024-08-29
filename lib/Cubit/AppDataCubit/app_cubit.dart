@@ -75,7 +75,9 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetDataSuccessful());
     } catch (e) {
       NaviCubit.get(context).pop(context);
-
+      showToast("خطا", SnackBarType.fail, context);
+      print(e.toString());
+      showToast(e.toString(), SnackBarType.fail, context);
       emit(GetDataError());
     }
   }

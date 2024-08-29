@@ -24,6 +24,7 @@ class _SignLayoutState extends State<SignLayout> {
         decoration: const BoxDecoration(color: Colors.amberAccent),
         child: Column(
           children: [
+            getCube(2, context),
             logoContainer(context),
             Expanded(
               child: Container(

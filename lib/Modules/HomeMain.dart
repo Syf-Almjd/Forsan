@@ -19,56 +19,55 @@ class HomeMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // when should i build a new context
     return SafeArea(
-      child: Scaffold(
-        body: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Scaffold(
-                body: BlocBuilder<BaBBloc, BaBState>(
-                  builder: (context, state) {
-                    if (state is ProductScreen) {
-                      return const productsPage();
-                    }
-                    if (state is CartScreen) {
-                      return const CartPage();
-                    }
-                    if (state is ProfileScreen) {
-                      return const profilePage();
-                    }
-                    if (state is HomeScreen) {
-                      return const homePage();
-                    } else {
-                      return const homePage();
-                    }
-                  },
-                ),
-                bottomNavigationBar: BlocBuilder<BaBBloc, BaBState>(
-                  builder: (context, state) {
-                    return AnimatedBottomNavigationBar(
-                      icons: homeMenuIcons,
-                      activeIndex: state.defaultIndex,
-                      backgroundColor: Colors.amberAccent,
-                      leftCornerRadius: 50,
-                      iconSize: 28,
-                      elevation: 20,
-                      gapLocation: GapLocation.none,
-                      inactiveColor: Colors.grey,
-                      splashColor: Colors.white,
-                      borderColor: Colors.cyan,
-                      activeColor: Colors.white,
-                      rightCornerRadius: 50,
-                      onTap: (index) => BlocProvider.of<BaBBloc>(context)
-                          .add(TabChange(index)),
-                      //other params
-                    );
-                  },
-                ),
-              );
-            } else {
-              return IntroductionScreen(
+      child: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              body: BlocBuilder<BaBBloc, BaBState>(
+                builder: (context, state) {
+                  if (state is ProductScreen) {
+                    return const productsPage();
+                  }
+                  if (state is CartScreen) {
+                    return const CartPage();
+                  }
+                  if (state is ProfileScreen) {
+                    return const profilePage();
+                  }
+                  if (state is HomeScreen) {
+                    return const homePage();
+                  } else {
+                    return const homePage();
+                  }
+                },
+              ),
+              bottomNavigationBar: BlocBuilder<BaBBloc, BaBState>(
+                builder: (context, state) {
+                  return AnimatedBottomNavigationBar(
+                    icons: homeMenuIcons,
+                    activeIndex: state.defaultIndex,
+                    backgroundColor: Colors.amberAccent,
+                    leftCornerRadius: 50,
+                    iconSize: 28,
+                    elevation: 20,
+                    gapLocation: GapLocation.none,
+                    inactiveColor: Colors.grey,
+                    splashColor: Colors.white,
+                    borderColor: Colors.cyan,
+                    activeColor: Colors.white,
+                    rightCornerRadius: 50,
+                    onTap: (index) =>
+                        BlocProvider.of<BaBBloc>(context).add(TabChange(index)),
+                    //other params
+                  );
+                },
+              ),
+            );
+          } else {
+            return Scaffold(
+              body: IntroductionScreen(
                 globalBackgroundColor: Colors.white,
                 pages: listPagesViewModel(context),
                 showSkipButton: false,
@@ -99,10 +98,10 @@ class HomeMain extends StatelessWidget {
                   activeShape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25.0)),
                 ),
-              );
-            }
-          },
-        ),
+              ),
+            );
+          }
+        },
       ),
     );
   }

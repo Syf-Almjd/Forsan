@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/Components/ChooseWidget.dart';
 import 'package:forsan/Components/Components.dart';
 import 'package:forsan/Cubit/AppDataCubit/app_cubit.dart';
 import 'package:forsan/Models/OrderModel.dart';
+import 'package:forsan/Modules/Cart/Payment/PaymentPage.dart';
 import 'package:forsan/generated/assets.dart';
 
 import '../../Cubit/Navigation/navi_cubit.dart';
 
 class CartList extends StatefulWidget {
   final OrderModel order;
-  final Function onTap;
   final bool isHistory;
+  final VoidCallback onTap;
 
   const CartList(
       {super.key,
@@ -29,7 +32,8 @@ class _CartListState extends State<CartList> {
       padding: const EdgeInsets.all(15.0),
       child: InkWell(
         onTap: () {
-          widget.onTap(widget.order);
+          NaviCubit.get(context)
+              .navigate(context, PaymentPage(order: widget.order));
         },
         child: Container(
           width: getWidth(100, context),
@@ -45,7 +49,11 @@ class _CartListState extends State<CartList> {
                 child: Row(
                   children: [
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        showToast("تم نسخ رقم خدمة العملاء",
+                            SnackBarType.success, context);
+                        await Clipboard.setData(
+                            const ClipboardData(text: "+966501510093"));
                         openUrl("tel:+966501510093");
                       },
                       child: Container(
@@ -118,6 +126,7 @@ class _CartListState extends State<CartList> {
                             NaviCubit.get(context).pop(context, forced: true);
                           },
                         );
+                        widget.onTap();
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(10),

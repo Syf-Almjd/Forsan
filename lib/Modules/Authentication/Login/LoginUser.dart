@@ -46,6 +46,7 @@ class _LoginState extends State<Login> {
             child: Column(
               children: [
                 TextFormField(
+                  textDirection: TextDirection.rtl,
                   validator: (value) {
                     if (value!.isEmpty || !value.contains('@')) {
                       showToast(
@@ -65,6 +66,7 @@ class _LoginState extends State<Login> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  textDirection: TextDirection.rtl,
                   validator: (value) {
                     if (value!.isEmpty || value.length <= 4) {
                       showToast("كلمة المرور الايميل غير صحيحة",

@@ -128,7 +128,9 @@ class _HistoryCartPageState extends State<HistoryCartPage> {
                         order: snapshot.data.reversed.toList()[index],
                         isHistory: true,
                         // Reverse the list and then access items
-                        onTap: (order) {},
+                        onTap: () {
+                          setState(() {});
+                        },
                       ),
                     ),
                   );

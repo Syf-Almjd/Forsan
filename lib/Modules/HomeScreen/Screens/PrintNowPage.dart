@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,10 +19,10 @@ class printNowPage extends StatefulWidget {
   const printNowPage(this.title, {super.key});
 
   @override
-  printNowPageState createState() => printNowPageState();
+  PrintNowPageState createState() => PrintNowPageState();
 }
 
-class printNowPageState extends State<printNowPage> {
+class PrintNowPageState extends State<printNowPage> {
   TextEditingController moreRequirement = TextEditingController();
   TextEditingController discountText = TextEditingController();
   TextEditingController numberOfPapersController =
@@ -29,15 +30,15 @@ class printNowPageState extends State<printNowPage> {
   double totalPrice = 0.0;
 
   bool fileUploaded = false;
-  var FILEuploded;
   String fileName = "";
   Map<String, String> orderList = {};
   bool changePassBtn = false;
-  var discountCode;
+  String? discountCode;
+  var userUploadedFile;
 
   void addItemToOrder(String key, String item) {
     setState(() {
-      orderList[key] = (item);
+      orderList[key] = item;
       totalPrice =
           calculatePrice(); // Update price whenever an item is selected
     });
@@ -47,12 +48,12 @@ class printNowPageState extends State<printNowPage> {
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   Random rnd = Random();
 
-  GeneCode() => String.fromCharCodes(
+  String generateCode() => String.fromCharCodes(
       Iterable.generate(8, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
 
   @override
   Widget build(BuildContext context) {
-    String generatedCode = GeneCode();
+    String generatedCode = generateCode();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -273,7 +274,6 @@ class printNowPageState extends State<printNowPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CupertinoSwitch(
-                    applyTheme: true,
                     value: changePassBtn,
                     onChanged: (value) => setState(() {
                       changePassBtn = value;
@@ -297,6 +297,7 @@ class printNowPageState extends State<printNowPage> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: TextField(
+                    textDirection: TextDirection.rtl,
                     controller: discountText,
                     decoration: const InputDecoration(
                         labelText: 'استخدم (طالب) لخصم الطلاب',
@@ -312,11 +313,11 @@ class printNowPageState extends State<printNowPage> {
               loadButton(
                 onPressed: () {
                   checkUserInput(generatedCode);
-                  // showToast(
-                  //     "تم ارسال طلبك بنجاح", SnackBarType.success, context);
+                  // Uncomment if needed: showToast("تم ارسال طلبك بنجاح", SnackBarType.success, context);
                 },
                 buttonText: "اطبع الآن",
               ),
+              getCube(5, context),
             ],
           ),
         ),
@@ -325,22 +326,21 @@ class printNowPageState extends State<printNowPage> {
   }
 
   Future<void> checkUserInput(String generatedCode) async {
-    // if (changePassBtn && discountText.text != "طالب") {
-    //   showToast("لا يوجد هذا الخصم", SnackBarType.fail, context);
-    // }
-    if (orderList.values.length != 4 || fileName == "") {
+    if (orderList.values.length <= 4 || fileName.isEmpty) {
       showToast("يرجى ان تكمل كل الخيارات", SnackBarType.fail, context);
     } else {
       var user = await AppCubit.get(context).getLocalUserData();
 
       OrderModel submittedOrder = OrderModel(
         orderId: generatedCode.toUpperCase(),
-        orderFile: "",
+        orderFile: fileName,
         orderTitle: widget.title,
-        orderPrice: "",
+        orderPrice: totalPrice.toStringAsFixed(2),
         orderUser: user.userID,
         orderUserName: user.name,
-        orderDiscount: changePassBtn ? 'المستخدم لديه كود "$discountText"' : "",
+        orderDiscount: changePassBtn && discountCode == "طالب"
+            ? 'المستخدم لديه كود "$discountCode"'
+            : "",
         orderColor: orderList["اللون"].toString(),
         orderSize: orderList["الحجم"].toString(),
         orderPadding: orderList["الوجه"].toString(),
@@ -351,8 +351,9 @@ class printNowPageState extends State<printNowPage> {
         orderDate: DateTime.now().toUtc().toString(),
         orderPackaging: orderList["التغليف"].toString(),
       );
+
       await AppCubit.get(context)
-          .uploadFullOrder(submittedOrder, FILEuploded, context);
+          .uploadFullOrder(submittedOrder, userUploadedFile, context);
     }
   }
 
@@ -383,22 +384,22 @@ class printNowPageState extends State<printNowPage> {
     if (orderList.containsKey("التغليف")) {
       switch (orderList["التغليف"]) {
         case 'سلك حديد':
-          basePrice += 5.00; // Add 2.00 for iron wire
+          basePrice += 5.00; // Add 5.00 for iron wire
           break;
         case 'سلك بلاستيك':
-          basePrice += 5.00; // Add 1.50 for plastic wire
+          basePrice += 5.00; // Add 5.00 for plastic wire
           break;
         case 'كيس شفاف':
-          basePrice += 0.50; // Add 1.00 for transparent bag
+          basePrice += 0.50; // Add 0.50 for transparent bag
           break;
         case 'لصق':
-          basePrice += 3.00; // Add 0.50 for tape
+          basePrice += 3.00; // Add 3.00 for tape
           break;
         case 'تدبيس جانبي':
-          basePrice += 0.00; // Add 0.75 for side stapling
+          basePrice += 0.00; // No additional cost for side stapling
           break;
         case 'تدبيس زاوية':
-          basePrice += 0.00; // Add 0.50 for corner stapling
+          basePrice += 0.00; // No additional cost for corner stapling
           break;
         case 'بدون تغليف وبدون تدبيس':
           basePrice += 0.00; // No additional cost for no packaging or stapling
@@ -410,7 +411,7 @@ class printNowPageState extends State<printNowPage> {
     }
 
     // Apply discount if applicable
-    // if (discountCode != null && discountCode == "طالب") {
+    // if (changePassBtn && discountCode == "طالب") {
     //   basePrice *= 0.9; // 10% student discount
     // }
 
@@ -419,14 +420,20 @@ class printNowPageState extends State<printNowPage> {
     return basePrice * numberOfPapers;
   }
 
-  Future<void> _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+  void _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        // allowedExtensions: ['jpg', 'pdf', 'doc'],
+        );
+    if (result != null && result.files.single.path != null) {
+      /// Load result and file details
+      PlatformFile file = result.files.first;
 
-    if (result != null) {
-      FILEuploded = result.files.first.bytes;
+      /// normal file
       setState(() {
-        fileName = result.files.first.name;
+        userUploadedFile = file;
+        fileName = file.name;
         fileUploaded = true;
+        // fileLink = FileLINK;
       });
     }
   }
