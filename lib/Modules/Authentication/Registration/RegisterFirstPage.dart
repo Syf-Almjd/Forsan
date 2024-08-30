@@ -63,7 +63,6 @@ class _RegisterFirstPageState extends State<RegisterFirstPage> {
             child: Column(
               children: [
                 TextFormField(
-                  textDirection: TextDirection.rtl,
                   validator: (value) {
                     if (value!.isEmpty) {
                       showToast("الاسم غير صحيح!", SnackBarType.fail, context);
@@ -83,7 +82,6 @@ class _RegisterFirstPageState extends State<RegisterFirstPage> {
                 ),
                 getCube(2, context),
                 TextFormField(
-                  textDirection: TextDirection.rtl,
                   validator: (value) {
                     if (value!.isEmpty || !value.contains('0')) {
                       showToast("الرقم غير صحيح!", SnackBarType.fail, context);
@@ -103,7 +101,6 @@ class _RegisterFirstPageState extends State<RegisterFirstPage> {
                 ),
                 getCube(2, context),
                 TextFormField(
-                  textDirection: TextDirection.rtl,
                   validator: (value) {
                     if (value!.isEmpty || value.length <= 8) {
                       showToast(

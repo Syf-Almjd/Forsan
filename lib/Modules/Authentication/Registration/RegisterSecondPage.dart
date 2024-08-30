@@ -59,7 +59,6 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
               children: [
                 getCube(2, context),
                 TextFormField(
-                  textDirection: TextDirection.rtl,
                   validator: (value) {
                     if (value!.isEmpty ||
                         !value.contains('@') ||
@@ -82,7 +81,6 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                 ),
                 getCube(2, context),
                 TextFormField(
-                  textDirection: TextDirection.rtl,
                   validator: (value) {
                     if (value!.isEmpty || value.length <= 6) {
                       showToast("كلمة السر ضعيفة!", SnackBarType.fail, context);
@@ -110,7 +108,6 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                 ),
                 getCube(2, context),
                 TextFormField(
-                  textDirection: TextDirection.rtl,
                   validator: (value) {
                     if (value!.isEmpty || !(value == password.text)) {
                       showToast(

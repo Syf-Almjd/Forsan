@@ -304,8 +304,8 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> uploadUserFiles(userFile, OrderModel order, context) async {
     emit(GettingData());
-    IconSnackBar.show(context,
-        snackBarType: SnackBarType.success, label: "يتم الآن معالجة طلبك...");
+    // IconSnackBar.show(context,
+    //     snackBarType: SnackBarType.success, label: "يتم الآن معالجة طلبك...");
 
     var path = '/userOrderFiles/${userFile.name}';
     final file = File(userFile.path);

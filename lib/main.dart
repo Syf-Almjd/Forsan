@@ -35,7 +35,7 @@ void main() async {
   // await FirebaseAuth.instance.signInAnonymously();// REMOVE later
   runApp(
     DevicePreview(
-      enabled: kReleaseMode,
+      enabled: !kReleaseMode,
       builder: (context) => const MyApp(), // Wrap your app
     ),
   );
@@ -88,8 +88,8 @@ class MyApp extends StatelessWidget {
                 primary: Colors.amberAccent,
               ),
         ),
-        // locale: DevicePreview.locale(context),
-        // builder: DevicePreview.appBuilder,
+        locale: DevicePreview.locale(context),
+        builder: DevicePreview.appBuilder,
         home: const HomeMain(),
       ),
     );
