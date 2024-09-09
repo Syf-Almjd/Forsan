@@ -35,10 +35,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("الاعدادات"),
-        centerTitle: true,
-      ),
+      appBar: appCustomBar("الاعدادات", context),
       body: ListView(
         physics: const BouncingScrollPhysics(),
         // mainAxisSize: MainAxisSize.min,

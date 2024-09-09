@@ -414,7 +414,7 @@ appCustomBar(String title, context) {
         )),
     leading: IconButton(
       // Back button
-      icon: const Icon(Icons.cancel_outlined, color: Colors.black),
+      icon: const Icon(Icons.cancel_outlined, size: 30, color: Colors.black),
       onPressed: () {
         Navigator.pop(context);
       },

@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/Components/ChooseWidget.dart';
@@ -308,30 +304,30 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appCustomBar("مستند الطلب", context),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              child: TextButton.icon(
-                onPressed: () async {
-                  await printReceipt();
-                },
-                icon: const Icon(Icons.receipt_long_outlined,
-                    color: Colors.black),
-                label: const Text(
-                  'تنزيل ومشاركة الفاتورة',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: SingleChildScrollView(
-                child: saveConfirmedData(widget.orderModel, false),
-              ),
-            ),
+            //   SizedBox(
+            //     child: TextButton.icon(
+            //       onPressed: () async {
+            //         await printReceipt();
+            //       },
+            //       icon: const Icon(Icons.receipt_long_outlined,
+            //           color: Colors.black),
+            //       label: const Text(
+            //         'تنزيل ومشاركة الفاتورة',
+            //         style: TextStyle(color: Colors.black),
+            //       ),
+            //     ),
+            //   ),
+            //   const SizedBox(height: 20),
+            //   Expanded(
+            //     child: SingleChildScrollView(
+            //       child: saveConfirmedData(widget.orderModel, false),
+            //     ),
+            //   ),
           ],
         ),
       ),
@@ -345,8 +341,8 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
     try {
       // Size printingSize = await showOrderPrintDialog(context: context);
       showLoadingDialog(context);
-      screenshotController
-          .captureFromWidget(saveConfirmedData(widget.orderModel, true),
+      await screenshotController
+          .captureFromWidget(await saveConfirmedData(widget.orderModel, true),
               targetSize: const Size(800, 1200), pixelRatio: 2.0)
           .then((imageBytes) {
         fromImageSavePDF(imageBytes);

@@ -177,7 +177,10 @@ class homePageState extends State<homePage> with AutomaticKeepAliveClientMixin {
                           Colors.white.withOpacity(0.8), BlendMode.lighten),
                       image: const AssetImage(Assets.assetsHomebg),
                     ),
-                    borderRadius: BorderRadius.circular(150),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(150),
+                      bottomRight: Radius.circular(150),
+                    ),
                   ),
                   child: Column(children: [
                     getCube(5, context),

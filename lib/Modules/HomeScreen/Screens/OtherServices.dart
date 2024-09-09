@@ -49,7 +49,8 @@ class otherServicesState extends State<otherServices> {
           backgroundColor: Colors.white,
           leading: IconButton(
             icon: const Icon(
-              Icons.arrow_back,
+              Icons.cancel_outlined,
+              size: 30,
               color: Colors.black,
             ),
             onPressed: () {

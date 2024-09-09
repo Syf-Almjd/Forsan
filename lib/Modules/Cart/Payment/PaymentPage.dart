@@ -51,10 +51,7 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("الدفع"),
-        centerTitle: true,
-      ),
+      appBar: appCustomBar("الدفع", context),
       body: ListView(
         physics: const BouncingScrollPhysics(),
         children: [

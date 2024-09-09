@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
+import 'package:increment_decrement_form_field/increment_decrement_form_field.dart';
 
 import '../../../Components/ChooseWidget.dart';
 import '../../../Components/Components.dart';
@@ -24,8 +25,7 @@ class printNowPage extends StatefulWidget {
 class PrintNowPageState extends State<printNowPage> {
   TextEditingController moreRequirement = TextEditingController();
   TextEditingController discountText = TextEditingController();
-  TextEditingController numberOfPapersController =
-      TextEditingController(text: "1");
+  int numberOfPapers = 1;
   double totalPrice = 0.0;
 
   bool fileUploaded = false;
@@ -72,7 +72,8 @@ class PrintNowPageState extends State<printNowPage> {
           backgroundColor: Colors.white,
           leading: IconButton(
             icon: const Icon(
-              Icons.arrow_back,
+              Icons.cancel_outlined,
+              size: 30,
               color: Colors.black,
             ),
             onPressed: () {
@@ -237,26 +238,66 @@ class PrintNowPageState extends State<printNowPage> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: TextField(
-                  textDirection: TextDirection.rtl,
-                  controller: numberOfPapersController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: "أدخل عدد الأوراق",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
+              Container(
+                padding: const EdgeInsets.only(top: 15, right: 10, left: 10),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.grey.withOpacity(0.1),
+                ),
+                width: getWidth(80, context),
+                child: Center(
+                  child: IncrementDecrementFormField<int>(
+                    // an initial value
+                    initialValue: numberOfPapers,
+                    // if no value set 0, otherwise display the value as a string
+                    displayBuilder: (value, field) {
+                      return Text(
+                        value == null ? "1" : value.toString(),
+                      );
+                    },
+                    onDecrement: (currentValue) {
+                      if (currentValue! <= 1) {
+                        return 1;
+                      }
+                      setState(() {
+                        numberOfPapers = currentValue - 1;
+                      });
                       totalPrice = calculatePrice();
-                    });
-                  },
+
+                      return numberOfPapers;
+                    },
+
+                    onIncrement: (currentValue) {
+                      setState(() {
+                        numberOfPapers = currentValue! + 1;
+                      });
+                      totalPrice = calculatePrice();
+
+                      return numberOfPapers;
+                    },
+                  ),
                 ),
               ),
-              getCube(2, context),
+              // Padding(
+              //   padding: const EdgeInsets.all(15.0),
+              //   child: TextField(
+              //     textDirection: TextDirection.rtl,
+              //     controller: n,
+              //     keyboardType: TextInputType.number,
+              //     decoration: InputDecoration(
+              //       hintText: "أدخل عدد الأوراق",
+              //       border: OutlineInputBorder(
+              //         borderRadius: BorderRadius.circular(20),
+              //       ),
+              //     ),
+              //     onChanged: (value) {
+              //       setState(() {
+              //       });
+              //     },
+              //   ),
+              // ),
+              getCube(4, context),
               SizedBox(
                 height: getHeight(18, context),
                 width: getWidth(90, context),
@@ -419,7 +460,6 @@ class PrintNowPageState extends State<printNowPage> {
     }
 
     // Multiply by the number of papers
-    int numberOfPapers = int.tryParse(numberOfPapersController.text) ?? 1;
     return basePrice * numberOfPapers;
   }
 

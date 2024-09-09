@@ -29,23 +29,7 @@ class _DetailsPageState extends State<DetailsPage> {
     generatedCode = generateCode();
     return Scaffold(
         backgroundColor: Colors.amberAccent,
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(Icons.arrow_back_ios),
-            color: Colors.white,
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          title: const Text('Details',
-              style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 18.0,
-                  color: Colors.white)),
-          centerTitle: true,
-        ),
+        appBar: appCustomBar("المنتج", context),
         body: ListView(physics: const ClampingScrollPhysics(), children: [
           Stack(children: [
             Container(

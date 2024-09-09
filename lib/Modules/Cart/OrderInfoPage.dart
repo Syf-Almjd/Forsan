@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/Components/Components.dart';
 import 'package:forsan/Components/Shared/utils/styles/app_colors.dart';
-import 'package:forsan/Cubit/AppDataCubit/app_cubit.dart';
 import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
 import 'package:forsan/Models/OrderModel.dart';
 import 'package:forsan/Modules/Cart/Payment/OrderReceipt.dart';
@@ -81,8 +80,8 @@ class _OrderInfoPageState extends State<OrderInfoPage> {
                   (value) => _updateOrderField('orderDescription', value)),
               _buildEditableRow('عنوان الطلب', _order.orderTitle,
                   (value) => _updateOrderField('orderTitle', value)),
-              _buildEditableRow('المستخدم', _order.orderUserName,
-                  (value) => _updateOrderField('orderUserName', value)),
+              // _buildEditableRow('المستخدم', _order.orderUserName,
+              // (value) => _updateOrderField('orderUserName', value)),
               if ("product" != _order.orderType &&
                   "service" != _order.orderType)
                 ...optionalRows,
@@ -97,22 +96,22 @@ class _OrderInfoPageState extends State<OrderInfoPage> {
               //     (value) => showToast("لا يمكن تغير التاريخ", context),
               //     isChangable: false),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  showToast(
-                      "تم نسخ رقم خدمة العملاء", SnackBarType.success, context);
-                  await Clipboard.setData(
-                      const ClipboardData(text: "+966501510093"));
-                  checkNOpenUrl("tel:+966501510093", context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber,
-                ),
-                child: const Text(
-                  'تواصل للتتغير',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     showToast(
+              //         "تم نسخ رقم خدمة العملاء", SnackBarType.success, context);
+              //     await Clipboard.setData(
+              //         const ClipboardData(text: "+966501510093"));
+              //     checkNOpenUrl("tel:+966501510093", context);
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Colors.amber,
+              //   ),
+              //   child: const Text(
+              //     'تواصل للتتغير',
+              //     style: TextStyle(color: Colors.white),
+              //   ),
+              // ),
               const SizedBox(height: 20),
             ],
           ),
@@ -130,7 +129,7 @@ class _OrderInfoPageState extends State<OrderInfoPage> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Card(
           color: AppColors.white,
-          elevation: 2,
+          elevation: 0,
           child: ListTile(
             title: Text(
               label,

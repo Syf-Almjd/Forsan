@@ -26,6 +26,7 @@ dependencies:
   pdf: ^3.10.8
   path_provider: ^2.0.2
   share_plus: ^8.0.2
+  increment_decrement_form_field: ^1.0.0
 
 
 #  awesome_snackbar_content: ^0.1.3

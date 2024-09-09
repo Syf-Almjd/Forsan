@@ -10,10 +10,7 @@ class OurPolicies extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("سياسات البرنامج"),
-        centerTitle: true,
-      ),
+      appBar: appCustomBar("سياسات البرنامج", context),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: ListView(

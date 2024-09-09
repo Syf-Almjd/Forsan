@@ -20,9 +20,7 @@ class BankPaymentPage extends StatelessWidget {
         TextEditingController(text: order.orderId);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("دفع بالايصال"),
-      ),
+      appBar: appCustomBar("دفع بالايصال", context),
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
