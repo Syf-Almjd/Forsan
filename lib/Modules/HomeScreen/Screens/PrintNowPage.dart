@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -348,7 +347,7 @@ class PrintNowPageState extends State<printNowPage> {
         orderStatus: "لم يدفع",
         orderDescription: moreRequirement.text,
         orderType: 'printing',
-        orderDate: DateTime.now().toUtc().toString(),
+        orderDate: DateTime.now().toLocal(),
         orderPackaging: orderList["التغليف"].toString(),
       );
 
@@ -362,22 +361,26 @@ class PrintNowPageState extends State<printNowPage> {
 
     // Determine the base price based on selected options
     if (orderList.containsKey("اللون")) {
-      basePrice += orderList["اللون"] == "ملون" ? 0.40 : 0.10;
+      // basePrice += orderList["اللون"] == "ملون" ? 0.40 : 0.10;
     }
 
     if (orderList.containsKey("الحجم")) {
       if (orderList["الحجم"] == "A5 (صغير)" ||
           orderList["الحجم"] == "A4 (عادي)") {
-        basePrice += 0.00; // No additional cost for A5 and A4
+        basePrice += orderList["اللون"] == "ملون"
+            ? 0.40
+            : 0.10; // No additional cost for A5 and A4
       } else if (orderList["الحجم"] == "A3 (كبير)") {
         basePrice += orderList["اللون"] == "ملون"
-            ? 3.00
+            ? 3.00 //todo only add if a3
             : 1.00; // A3 pricing based on color
       }
     }
 
     if (orderList.containsKey("النوع للورق")) {
-      basePrice += 3.00; // Fixed price for all paper types
+      basePrice += orderList["النوع للورق"] == "ورق عادي"
+          ? 0.00
+          : 3.00; // Fixed price for all paper types
     }
 
     // Add packaging options
@@ -411,9 +414,9 @@ class PrintNowPageState extends State<printNowPage> {
     }
 
     // Apply discount if applicable
-    // if (changePassBtn && discountCode == "طالب") {
-    //   basePrice *= 0.9; // 10% student discount
-    // }
+    if (changePassBtn && discountCode == "طالب") {
+      basePrice *= 0.95; // 5% student discount
+    }
 
     // Multiply by the number of papers
     int numberOfPapers = int.tryParse(numberOfPapersController.text) ?? 1;

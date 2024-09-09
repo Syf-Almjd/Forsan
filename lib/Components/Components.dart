@@ -1,17 +1,26 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as widgets;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:forsan/Components/Shared/utils/managers/app_enums.dart';
+import 'package:forsan/Components/Shared/utils/managers/app_extensions.dart';
+import 'package:forsan/Components/Shared/utils/styles/app_colors.dart';
 import 'package:forsan/Models/UserModel.dart';
 import 'package:forsan/generated/assets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../Cubit/AppDataCubit/app_cubit.dart';
@@ -395,11 +404,114 @@ Future showChoiceDialog(
       }));
 }
 
+appCustomBar(String title, context) {
+  return AppBar(
+    title: Text(title,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        )),
+    leading: IconButton(
+      // Back button
+      icon: const Icon(Icons.cancel_outlined, color: Colors.black),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    ),
+    centerTitle: true,
+    backgroundColor: AppColors.white,
+  );
+}
+
+Widget fileActionWidget({
+  required VoidCallback onOpen,
+  icon = Icons.file_present,
+  required String title,
+}) {
+  return Container(
+    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+    padding: const EdgeInsets.all(16.0),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          spreadRadius: 2,
+          blurRadius: 8,
+          offset: const Offset(0, 4), // changes position of shadow
+        ),
+      ],
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Row(
+            children: [
+              const Icon(
+                Icons.file_present,
+                size: 24,
+                color: Colors.blueAccent,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 16),
+        ElevatedButton(
+          onPressed: onOpen,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.amber,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            minimumSize: const Size(150, 50), // Ensures button is sizable
+          ),
+          child: const Text(
+            'فتح', // "Open" in Arabic
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 void showToast(String text, SnackBarType type, context) => IconSnackBar.show(
       context,
       snackBarType: type,
       label: text,
     );
+
+bool isDesktopSize(context) {
+  return getWidth(100, context) >= DeviceType.ipad.getMaxWidth();
+}
+
+String getFormatDate(date) {
+  if (date is DateTime) {
+    return date.toLocal().toString().substring(0, 16).replaceAll(" ", " - ");
+  }
+  return DateTime.tryParse(date)?.toLocal().toString().substring(0, 16) ??
+      ''.replaceAll(" ", " - ");
+}
 
 String generateCode() {
   String chars =
@@ -439,12 +551,18 @@ Padding logoContainer(context) {
   );
 }
 
-void openUrl(String url) {
-  var openUrl = Uri.parse(url);
-  launchUrl(
-    openUrl,
-    mode: LaunchMode.externalApplication,
-  );
+void checkNOpenUrl(orderUrl, context) {
+  try {
+    MemoryImage(base64Decode(orderUrl));
+    showToast(
+        'لا يوجد ملف, هذا الطلب عبارة عن منتج', SnackBarType.alert, context);
+  } catch (e) {
+    var openUrl = Uri.parse(orderUrl);
+    launchUrl(
+      openUrl,
+      mode: LaunchMode.externalApplication,
+    );
+  }
 }
 
 ///For photo selection
@@ -567,6 +685,68 @@ Future<Uint8List> assetToUint8List(String assetPath) async {
   ByteData data = await rootBundle.load(assetPath);
   List<int> bytes = data.buffer.asUint8List();
   return Uint8List.fromList(bytes);
+}
+
+Future<String> fromImageSavePDF(Uint8List screenShot) async {
+  final widgets.Document pdf = widgets.Document();
+
+  // Add page with the image
+  final image = widgets.MemoryImage(screenShot);
+  pdf.addPage(
+    widgets.Page(
+      pageFormat: PdfPageFormat.roll80,
+      build: (context) {
+        return widgets.Center(
+          child: widgets.Image(image),
+        );
+      },
+    ),
+  );
+
+  // Save PDF differently depending on the platform
+  final Uint8List pdfBytes = await pdf.save();
+
+  // if (kIsWeb) {
+  //   // For web: create a downloadable link
+  //   final blob = html.Blob([pdfBytes], 'application/pdf');
+  //   final url = html.Url.createObjectUrlFromBlob(blob);
+  //   final anchor = html.AnchorElement(href: url)
+  //     ..setAttribute('download', 'forsan_order.pdf')
+  //     ..click();
+
+  //   html.Url.revokeObjectUrl(url);
+  //   return anchor.pathname ?? "";
+  // }
+  // else
+  // {
+  // For mobile: save to the file system
+  final Directory? directory = await getApplicationDocumentsDirectory();
+  if (directory == null) {
+    throw Exception('Could not access storage');
+  }
+  final String path = '${directory.path}/forsan_order.pdf';
+  final File file = File(path);
+
+  try {
+    await file.writeAsBytes(pdfBytes);
+    if (!kIsWeb) {
+      shareFile(path);
+    }
+    return file.path;
+  } catch (error) {
+    rethrow;
+  }
+  // }
+}
+
+void shareFile(
+  path,
+) async {
+  try {
+    await Share.shareXFiles([XFile(path)]);
+  } catch (e) {
+    rethrow;
+  }
 }
 
 //OTHER

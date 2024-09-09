@@ -136,8 +136,8 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetDataSuccessful());
     } catch (e) {
       emit(GetDataError());
-      IconSnackBar.show(context,
-          snackBarType: SnackBarType.success, label: 'حاول مرة أخرى');
+      // IconSnackBar.show(context,
+      // snackBarType: SnackBarType.success, label: 'حاول مرة أخرى');
     }
   }
 
@@ -235,10 +235,10 @@ class AppCubit extends Cubit<AppStates> {
       emit(GettingData());
 
       // Parse the order date and convert it to UTC
-      final DateTime orderDate = DateTime.parse(order.orderDate).toUtc();
+      final DateTime orderDate = order.orderDate;
 
       // Get the current UTC time
-      final DateTime currentTime = DateTime.now().toUtc();
+      final DateTime currentTime = DateTime.now().toLocal();
 
       // Check if the current time is within 5 minutes of the order date
       if (currentTime.isBefore(orderDate.add(const Duration(minutes: 5)))) {

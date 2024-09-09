@@ -14,7 +14,7 @@ class OrderModel {
   String orderPaper;
   String orderDescription;
   String orderStatus;
-  String orderDate;
+  DateTime orderDate;
 
   OrderModel({
     required this.orderId,
@@ -40,7 +40,8 @@ class OrderModel {
     try {
       return OrderModel(
         orderId: json['orderId'] ?? "",
-        orderDate: json['orderDate'] ?? "",
+        orderDate: DateTime.tryParse(json['orderDate'])?.toLocal() ??
+            DateTime.now().toLocal(),
         orderFile: json['orderFile'] ?? "",
         orderDiscount: json['orderDiscount'] ?? "",
         orderTitle: json['orderTitle'] ?? "",
@@ -70,7 +71,7 @@ class OrderModel {
         orderTitle: json['orderTitle'] ?? "",
         orderType: json['orderType'] ?? "",
         orderUser: json['orderUser'] ?? "",
-        orderDate: 'هذا الطلب من برنامج قديم',
+        orderDate: DateTime.now().toLocal(),
         orderDiscount: '',
         orderUserName: '',
         orderPackaging: '',

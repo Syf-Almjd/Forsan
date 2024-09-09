@@ -6,7 +6,6 @@ import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
 import 'package:forsan/Models/OrderModel.dart';
 import 'package:forsan/Modules/Cart/CartList.dart';
 import 'package:forsan/Modules/Cart/HistoryCartPage.dart';
-import 'package:forsan/Modules/Cart/Payment/PaymentPage.dart';
 
 import '../../Cubit/AppDataCubit/app_cubit.dart';
 
@@ -46,7 +45,7 @@ class _CartPageState extends State<CartPage> {
                         context);
                     await Clipboard.setData(
                         const ClipboardData(text: "+966501510093"));
-                    openUrl("tel:+966501510093");
+                    checkNOpenUrl("tel:+966501510093", context);
                   },
                   child: Container(
                     width: getWidth(40, context),
@@ -156,8 +155,9 @@ class _CartPageState extends State<CartPage> {
                   ],
                 ));
               }
-              snapshot.data.sort((a, b) => DateTime.parse(b.orderDate)
-                  .compareTo(DateTime.parse(a.orderDate)));
+              (snapshot.data as List<OrderModel>).sort(
+                  (OrderModel a, OrderModel b) =>
+                      b.orderDate.compareTo(a.orderDate));
 
               return Expanded(
                 child: ListView.builder(

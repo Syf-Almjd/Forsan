@@ -47,7 +47,7 @@ class homePageState extends State<homePage> with AutomaticKeepAliveClientMixin {
                         child: InkWell(
                           onTap: () {
                             NaviCubit.get(context)
-                                .navigate(context, ContactUsPage());
+                                .navigate(context, const ContactUsPage());
                           },
                           child: Column(
                             children: [
@@ -394,7 +394,7 @@ class homePageState extends State<homePage> with AutomaticKeepAliveClientMixin {
                       InkWell(
                         onTap: () {
                           NaviCubit.get(context)
-                              .navigate(context, ContactUsPage());
+                              .navigate(context, const ContactUsPage());
                         },
                         child: Text(
                           "الاتصال بنا",
@@ -421,7 +421,9 @@ class homePageState extends State<homePage> with AutomaticKeepAliveClientMixin {
                             index: index,
                             img: socialMediaList.keys.toList()[index],
                             onTap: (index) {
-                              openUrl(socialMediaList.values.toList()[index]);
+                              checkNOpenUrl(
+                                  socialMediaList.values.toList()[index],
+                                  context);
                             });
                       }),
                 ),

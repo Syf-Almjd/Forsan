@@ -137,7 +137,8 @@ class _ContactUsPageState extends State<ContactUsPage> {
                         index: index,
                         img: socialMediaList.keys.toList()[index],
                         onTap: (index) {
-                          openUrl(socialMediaList.values.toList()[index]);
+                          checkNOpenUrl(
+                              socialMediaList.values.toList()[index], context);
                         },
                       );
                     },

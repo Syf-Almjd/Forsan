@@ -137,8 +137,9 @@ class _profilePageState extends State<profilePage> {
                       title: "تقييم البرنامج",
                       icon: Icons.star_rate,
                       onPress: () {
-                        openUrl(
-                            "https://play.google.com/store/apps/details?id=com.mjd.forsan.forsan");
+                        checkNOpenUrl(
+                            "https://play.google.com/store/apps/details?id=com.mjd.forsan.forsan",
+                            context);
                       }),
                   ProfileMenuWidget(
                       title: "تسجيل الخروج",

@@ -2,7 +2,6 @@ import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forsan/Cubit/BaB%20BloC/ba_b_bloc.dart';
 import 'package:forsan/Cubit/Navigation/navi_cubit.dart';
@@ -34,11 +33,12 @@ void main() async {
   );
   // await FirebaseAuth.instance.signInAnonymously();// REMOVE later
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => const MyApp(), // Wrap your app
-    ),
-  );
+      // DevicePreview(
+      //   enabled: !kReleaseMode,
+      //   builder: (context) => const
+      MyApp() // Wrap your app
+      //   ),
+      );
 }
 
 class MyApp extends StatelessWidget {
@@ -66,7 +66,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Almarai',
-
           appBarTheme: const AppBarTheme(
             backgroundColor: Colors.white,
             elevation: 0,

@@ -68,7 +68,7 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
             textAlign: TextAlign.center,
           ),
         ),
-        Spacer(),
+        const Spacer(),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Container(

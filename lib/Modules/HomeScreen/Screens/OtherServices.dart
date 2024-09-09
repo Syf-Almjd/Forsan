@@ -25,7 +25,7 @@ class otherServicesState extends State<otherServices> {
   var FILEuploded;
   String fileName = "";
   String fileLink = "";
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   String chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
@@ -105,7 +105,8 @@ class otherServicesState extends State<otherServices> {
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 5, color: Colors.yellow),
+                      borderSide:
+                          const BorderSide(width: 5, color: Colors.yellow),
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),
@@ -148,8 +149,8 @@ class otherServicesState extends State<otherServices> {
           orderPadding: "",
           orderPaper: "",
           orderDescription: moreRequirement.text,
-          orderType: 'printing',
-          orderDate: DateTime.now().toUtc().toString(),
+          orderType: 'service',
+          orderDate: DateTime.now().toLocal(),
           orderDiscount: '',
           orderPackaging: '');
       await AppCubit.get(context)

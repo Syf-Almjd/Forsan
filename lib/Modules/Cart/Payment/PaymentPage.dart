@@ -72,16 +72,16 @@ class _PaymentPageState extends State<PaymentPage> {
             padding: const EdgeInsets.all(20.0),
             child: ElevatedButton(
               style: ButtonStyle(
-                  shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                  shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))),
-                  padding: const MaterialStatePropertyAll(EdgeInsets.all(20)),
+                  padding: const WidgetStatePropertyAll(EdgeInsets.all(20)),
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.green)),
+                      WidgetStateProperty.all<Color>(Colors.green)),
               onPressed: () {
                 widget.order.orderStatus = "الدفع كاش";
                 AppCubit.get(context).updateUserOrders(widget.order, context);
                 showToast("الدفع كاش", SnackBarType.success, context);
-                NaviCubit.get(context).navigateToHome(context);
+                NaviCubit.get(context).pop(context);
               },
               child: const Text("الدفع كاش"),
             ),
@@ -91,11 +91,11 @@ class _PaymentPageState extends State<PaymentPage> {
             padding: const EdgeInsets.all(20.0),
             child: ElevatedButton(
               style: ButtonStyle(
-                  shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                  shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))),
-                  padding: const MaterialStatePropertyAll(EdgeInsets.all(20)),
+                  padding: const WidgetStatePropertyAll(EdgeInsets.all(20)),
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blueAccent)),
+                      WidgetStateProperty.all<Color>(Colors.blueAccent)),
               onPressed: () {
                 NaviCubit.get(context)
                     .navigate(context, BankPaymentPage(order: widget.order));
@@ -108,11 +108,11 @@ class _PaymentPageState extends State<PaymentPage> {
             padding: const EdgeInsets.all(20.0),
             child: ElevatedButton(
               style: ButtonStyle(
-                  shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                  shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))),
-                  padding: const MaterialStatePropertyAll(EdgeInsets.all(20)),
+                  padding: const WidgetStatePropertyAll(EdgeInsets.all(20)),
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black)),
+                      WidgetStateProperty.all<Color>(Colors.black)),
               onPressed: () {
                 ApplePay(
                   config: widget.paymentConfig,

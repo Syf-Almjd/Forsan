@@ -75,7 +75,7 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20)),
                     labelText: "الايميل",
-                    prefixIcon: Icon(Icons.email_outlined),
+                    prefixIcon: const Icon(Icons.email_outlined),
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),

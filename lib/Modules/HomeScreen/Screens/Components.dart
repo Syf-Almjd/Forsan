@@ -59,7 +59,7 @@ Widget FileChosen(fileInfo, context) {
           )),
       getCube(2, context),
       Text(
-        "اسم الملف الذي رفع\n${fileInfo} ",
+        "اسم الملف الذي رفع\n$fileInfo ",
         style: fontAlmarai(size: 15, textColor: Colors.black),
         textAlign: TextAlign.center,
       ),

@@ -105,7 +105,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       Container(height: 25.0, color: Colors.grey, width: 1.0),
                       InkWell(
                         onTap: () {
-                          // openUrl(widget.product.productDescription);
+                          // checkNOpenUrl(widget.product.productDescription);
                           // showToast(
                           //     "Click the back Button to go back", ,context);
                         },
@@ -117,12 +117,13 @@ class _DetailsPageState extends State<DetailsPage> {
                               color: Colors.amberAccent),
                           child: InkWell(
                             onTap: () async {
-                              NaviCubit.get(context).pop(context);
-                              await productItemToOrder(
-                                  widget.product, generatedCode);
-
                               showToast("تمت الاضافة للسلة",
                                   SnackBarType.success, context);
+
+                              NaviCubit.get(context).pop(context);
+
+                              await productItemToOrder(
+                                  widget.product, generatedCode);
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -272,7 +273,7 @@ class _DetailsPageState extends State<DetailsPage> {
         orderSize: "",
         orderPadding: "",
         orderPaper: "",
-        orderDate: DateTime.now().toUtc().toString(),
+        orderDate: DateTime.now().toLocal(),
         orderDescription: productData.productDescription,
         orderStatus: "لم يدفع",
         orderType: 'product',

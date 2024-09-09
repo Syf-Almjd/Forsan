@@ -282,7 +282,7 @@ class BankPaymentPage extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () async {
-                          openUrl("https://wa.me/+966501510093");
+                          checkNOpenUrl("https://wa.me/+966501510093", context);
                         },
                         child: Container(
                           height: 70,
@@ -353,7 +353,7 @@ class BankPaymentPage extends StatelessWidget {
           context);
       // showErrorMessage("No Empty Boxes Allowed! :(");
     } else {
-      openUrl("https://wa.me/+966501510093");
+      checkNOpenUrl("https://wa.me/+966501510093", context);
       await Future.delayed(const Duration(seconds: 2));
       order.orderStatus = "تحويل بنكي";
       AppCubit.get(context).updateUserOrders(order, context);

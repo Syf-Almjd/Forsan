@@ -34,7 +34,7 @@ class _HistoryCartPageState extends State<HistoryCartPage> {
                   children: [
                     InkWell(
                       onTap: () {
-                        openUrl("tel:+966501510093");
+                        checkNOpenUrl("tel:+966501510093", context);
                       },
                       child: Container(
                         width: getWidth(70, context),
@@ -115,8 +115,9 @@ class _HistoryCartPageState extends State<HistoryCartPage> {
                     return const Expanded(
                         child: Center(child: Text("لا يوجد طلبات قديمة")));
                   }
-                  snapshot.data.sort((a, b) => DateTime.parse(b.orderDate)
-                      .compareTo(DateTime.parse(a.orderDate)));
+                  (snapshot.data as List<OrderModel>).sort(
+                      (OrderModel a, OrderModel b) =>
+                          b.orderDate.compareTo(a.orderDate));
 
                   return Expanded(
                     child: ListView.builder(

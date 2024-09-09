@@ -5,6 +5,8 @@ import 'package:forsan/Components/ChooseWidget.dart';
 import 'package:forsan/Components/Components.dart';
 import 'package:forsan/Cubit/AppDataCubit/app_cubit.dart';
 import 'package:forsan/Models/OrderModel.dart';
+import 'package:forsan/Modules/Cart/OrderInfoPage.dart';
+import 'package:forsan/Modules/Cart/Payment/OrderReceipt.dart';
 import 'package:forsan/Modules/Cart/Payment/PaymentPage.dart';
 import 'package:forsan/generated/assets.dart';
 
@@ -32,8 +34,20 @@ class _CartListState extends State<CartList> {
       padding: const EdgeInsets.all(15.0),
       child: InkWell(
         onTap: () {
-          NaviCubit.get(context)
-              .navigate(context, PaymentPage(order: widget.order));
+          if (widget.isHistory) {
+            NaviCubit.get(context)
+                .navigate(context, OrderReceiptPage(orderModel: widget.order));
+            return;
+          }
+          if (widget.order.orderStatus == "لم يدفع") {
+            NaviCubit.get(context)
+                .navigate(context, PaymentPage(order: widget.order));
+            // showToast("تم الدفع مسب?قًا", SnackBarType.error, context);
+            return;
+          } else {
+            NaviCubit.get(context)
+                .navigate(context, OrderInfoPage(order: widget.order));
+          }
         },
         child: Container(
           width: getWidth(100, context),
@@ -54,7 +68,7 @@ class _CartListState extends State<CartList> {
                             SnackBarType.success, context);
                         await Clipboard.setData(
                             const ClipboardData(text: "+966501510093"));
-                        openUrl("tel:+966501510093");
+                        checkNOpenUrl("tel:+966501510093", context);
                       },
                       child: Container(
                         padding: const EdgeInsets.all(10),
@@ -111,36 +125,42 @@ class _CartListState extends State<CartList> {
                         ),
                 ),
               ),
-              Visibility(
-                visible: !widget.isHistory,
-                child: Positioned(
-                  bottom: 1,
-                  left: 1,
-                  child: InkWell(
-                      onTap: () async {
-                        showLoadingDialog(context);
-                        await AppCubit.get(context)
-                            .deleteUserOrders(widget.order, context)
-                            .then(
-                          (value) {
-                            NaviCubit.get(context).pop(context, forced: true);
-                          },
-                        );
-                        widget.onTap();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.delete_outline_outlined,
-                              color: Colors.red.withOpacity(0.9),
-                            ),
-                            // const Text("الغاء الطلب", style: TextStyle(color: Colors.red),),
-                          ],
-                        ),
-                      )),
-                ),
+              Positioned(
+                bottom: 1,
+                left: 1,
+                child: InkWell(
+                    onTap: () async {
+                      if (widget.isHistory) {
+                        NaviCubit.get(context).navigate(context,
+                            OrderReceiptPage(orderModel: widget.order));
+                        return;
+                      }
+                      showLoadingDialog(context);
+                      await AppCubit.get(context)
+                          .deleteUserOrders(widget.order, context)
+                          .then(
+                        (value) {
+                          NaviCubit.get(context).pop(context, forced: true);
+                        },
+                      );
+                      widget.onTap();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          Icon(
+                            widget.isHistory
+                                ? Icons.receipt_long_outlined
+                                : Icons.delete_outline_outlined,
+                            color: widget.isHistory
+                                ? Colors.blue.withOpacity(0.9)
+                                : Colors.red.withOpacity(0.9),
+                          ),
+                          // const Text("الغاء الطلب", style: TextStyle(color: Colors.red),),
+                        ],
+                      ),
+                    )),
               ),
               Positioned(
                   top: 20,
