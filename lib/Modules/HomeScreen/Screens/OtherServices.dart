@@ -10,22 +10,21 @@ import '../../../Components/Components.dart';
 import '../../../Cubit/AppDataCubit/app_cubit.dart';
 import 'Components.dart';
 
-class otherServices extends StatefulWidget {
+class OtherServices extends StatefulWidget {
   final String title;
 
-  const otherServices(this.title, {super.key});
+  const OtherServices(this.title, {super.key});
 
   @override
-  otherServicesState createState() => otherServicesState();
+  OtherServicesState createState() => OtherServicesState();
 }
 
-class otherServicesState extends State<otherServices> {
+class OtherServicesState extends State<OtherServices> {
   TextEditingController moreRequirement = TextEditingController();
   bool fileUploaded = false;
   var FILEuploded;
   String fileName = "";
   String fileLink = "";
-  final bool _isLoading = false;
 
   String chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';

@@ -9,7 +9,7 @@ import 'package:screenshot/screenshot.dart';
 class OrderReceiptPage extends StatefulWidget {
   final OrderModel orderModel;
 
-  OrderReceiptPage({required this.orderModel});
+  const OrderReceiptPage({super.key, required this.orderModel});
 
   @override
   _OrderReceiptPageState createState() => _OrderReceiptPageState();

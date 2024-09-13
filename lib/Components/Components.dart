@@ -720,10 +720,7 @@ Future<String> fromImageSavePDF(Uint8List screenShot) async {
   // else
   // {
   // For mobile: save to the file system
-  final Directory? directory = await getApplicationDocumentsDirectory();
-  if (directory == null) {
-    throw Exception('Could not access storage');
-  }
+  final Directory directory = await getApplicationDocumentsDirectory();
   final String path = '${directory.path}/forsan_order.pdf';
   final File file = File(path);
 

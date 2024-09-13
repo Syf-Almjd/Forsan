@@ -326,7 +326,7 @@ class homePageState extends State<homePage> with AutomaticKeepAliveClientMixin {
                               img: advList[index],
                               onTap: (title) {
                                 NaviCubit.get(context)
-                                    .navigate(context, otherServices(title));
+                                    .navigate(context, OtherServices(title));
                               },
                             );
                           }),
@@ -378,7 +378,7 @@ class homePageState extends State<homePage> with AutomaticKeepAliveClientMixin {
                               img: moreServiceImge[index],
                               onTap: (title) {
                                 NaviCubit.get(context)
-                                    .navigate(context, otherServices(title));
+                                    .navigate(context, OtherServices(title));
                               },
                             );
                           }),

@@ -14,30 +14,17 @@ import 'Modules/HomeMain.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
-  // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-  //   systemNavigationBarColor: Colors.amberAccent, // navigation bar color
-  //   statusBarColor: Colors.amberAccent, // status bar color
-  // ));
-  // SystemChrome.setEnabledSystemUIMode(
-  //   SystemUiMode.manual,
-  //   overlays: [SystemUiOverlay.top],
-  // );
-  // SystemChrome.setPreferredOrientations([
-  //   DeviceOrientation.portraitUp,
-  //   DeviceOrientation.portraitDown,
-  //   // DeviceOrientation.landscapeRight,
-  //   // DeviceOrientation.landscapeLeft,
-  // ]);
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // await FirebaseAuth.instance.signInAnonymously();// REMOVE later
-  runApp(
-      // DevicePreview(
-      //   enabled: !kReleaseMode,
-      //   builder: (context) => const
-      MyApp() // Wrap your app
-      //   ),
+
+  runApp(const MyApp()
+      // runApp(
+      //   DevicePreview(
+      //       enabled: !kReleaseMode,
+      //       builder: (context) => const MyApp() // Wrap your app
+      //       ),
       );
 }
 
