@@ -21,14 +21,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-
-
   runApp(
-    DevicePreview(
-        enabled: !kReleaseMode,
-        builder: (context) => const ForsanApp() // Wrap your app
-        ),
-  );
+      // DevicePreview(
+      //     enabled: !kReleaseMode,
+      //     builder: (context) =>
+      const ForsanApp() // Wrap your app
+      // ),
+      );
 }
 
 class ForsanApp extends StatelessWidget {
