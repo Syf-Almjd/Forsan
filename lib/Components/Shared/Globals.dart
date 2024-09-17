@@ -1,1 +1,0 @@
-int isSelected = 0;
