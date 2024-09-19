@@ -238,44 +238,57 @@ class PrintNowPageState extends State<PrintNowScreen> {
                   ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 15, right: 10, left: 10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey.withOpacity(0.1),
-                ),
-                width: getWidth(80, context),
-                child: Center(
-                  child: IncrementDecrementFormField<int>(
-                    // an initial value
-                    initialValue: numberOfPapers,
-                    // if no value set 0, otherwise display the value as a string
-                    displayBuilder: (value, field) {
-                      return Text(
-                        value == null ? "1" : value.toString(),
-                      );
-                    },
-                    onDecrement: (currentValue) {
-                      if (currentValue! <= 1) {
-                        return 1;
-                      }
-                      setState(() {
-                        numberOfPapers = currentValue - 1;
-                      });
-                      totalPrice = calculatePrice();
+              InkWell(
+                onTap: () async {
+                  var noPaper = await showPrintingNoDialog(context: context);
+                  try {
+                    numberOfPapers = int.parse(noPaper);
+                  } catch (e) {
+                    showToast("تاكد من كتابة الارقام بطريقة صحيحة",
+                        SnackBarType.fail, context);
+                    numberOfPapers = 1;
+                  }
+                  setState(() {});
+                },
+                child: Container(
+                  padding: const EdgeInsets.only(top: 15, right: 10, left: 10),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.grey.withOpacity(0.1),
+                  ),
+                  width: getWidth(80, context),
+                  child: Center(
+                    child: IncrementDecrementFormField<int>(
+                      // an initial value
+                      initialValue: numberOfPapers,
+                      // if no value set 0, otherwise display the value as a string
+                      displayBuilder: (value, field) {
+                        return Text(
+                          value == null ? "1" : value.toString(),
+                        );
+                      },
+                      onDecrement: (currentValue) {
+                        if (currentValue! <= 1) {
+                          return 1;
+                        }
+                        setState(() {
+                          numberOfPapers = currentValue - 1;
+                        });
+                        totalPrice = calculatePrice();
 
-                      return numberOfPapers;
-                    },
+                        return numberOfPapers;
+                      },
 
-                    onIncrement: (currentValue) {
-                      setState(() {
-                        numberOfPapers = currentValue! + 1;
-                      });
-                      totalPrice = calculatePrice();
+                      onIncrement: (currentValue) {
+                        setState(() {
+                          numberOfPapers = currentValue! + 1;
+                        });
+                        totalPrice = calculatePrice();
 
-                      return numberOfPapers;
-                    },
+                        return numberOfPapers;
+                      },
+                    ),
                   ),
                 ),
               ),

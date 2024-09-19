@@ -312,6 +312,109 @@ Widget socialMediaItem({
   );
 }
 
+Future<String> showPrintingNoDialog({
+  required BuildContext context,
+  String? initialText, // Optional parameter for initial text
+}) async {
+  // List of statuses
+  List<String> orderStatusList = [
+    'نسخة واحده',
+    'نسختين',
+    'ثلاث نسخ',
+    'اربع نسخ',
+    'خمس نسخ',
+  ];
+  String statusType = '';
+  TextEditingController textController =
+      TextEditingController(text: initialText);
+
+  await showCupertinoDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: Colors.white,
+        title: const Text(
+          "اختر عدد النسخ",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+          ),
+        ),
+        actionsAlignment: MainAxisAlignment.spaceAround,
+        content: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Status options
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: orderStatusList.map((status) {
+                  return GestureDetector(
+                    onTap: () {
+                      statusType = status;
+                      Navigator.pop(context, statusType);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.grey.withOpacity(0.2),
+                      ),
+                      child: Text(status),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              // Optional text input field
+              TextField(
+                controller: textController,
+                decoration: const InputDecoration(
+                  labelText: "أضف خياراً آخر)",
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (text) {
+                  // Optionally, handle text changes
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              if (statusType == '') {
+                statusType = textController.text.trim();
+              }
+
+              if (statusType.isNotEmpty) {
+                Navigator.pop(context, {statusType});
+              } else {
+                Navigator.pop(context, {statusType});
+              }
+            },
+            child: const Text("تأكيد", style: TextStyle(color: Colors.black)),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("إلغاء", style: TextStyle(color: Colors.black)),
+          ),
+        ],
+      );
+    },
+  );
+
+  // Return the selected status and optional comment
+  return statusType;
+}
+
 //Show a toast
 
 Widget loadButton({
