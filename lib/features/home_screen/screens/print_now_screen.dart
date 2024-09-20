@@ -251,7 +251,7 @@ class PrintNowPageState extends State<PrintNowScreen> {
                       numberOfPapers.value = noPaper;
                       formFieldState?.didChange(noPaper);
 
-                      totalPrice = await calculatePrice();
+                      totalPrice = calculatePrice();
 
                       setState(() {});
                     },
