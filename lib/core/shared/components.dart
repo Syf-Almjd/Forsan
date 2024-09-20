@@ -312,19 +312,19 @@ Widget socialMediaItem({
   );
 }
 
-Future<String> showPrintingNoDialog({
+Future<int> showPrintingNoDialog({
   required BuildContext context,
   String? initialText, // Optional parameter for initial text
 }) async {
   // List of statuses
-  List<String> orderStatusList = [
-    'نسخة واحده',
-    'نسختين',
-    'ثلاث نسخ',
-    'اربع نسخ',
-    'خمس نسخ',
-  ];
-  String statusType = '';
+  Map<String, int> orderStatusList = {
+    'نسخة واحده': 1,
+    'نسختين': 2,
+    'ثلاث نسخ': 3,
+    'اربع نسخ': 4,
+    'خمس نسخ': 5,
+  };
+  int paperNum = 1;
   TextEditingController textController =
       TextEditingController(text: initialText);
 
@@ -352,11 +352,11 @@ Future<String> showPrintingNoDialog({
               Wrap(
                 spacing: 10,
                 runSpacing: 10,
-                children: orderStatusList.map((status) {
+                children: orderStatusList.keys.map((status) {
                   return GestureDetector(
                     onTap: () {
-                      statusType = status;
-                      Navigator.pop(context, statusType);
+                      paperNum = orderStatusList[status] ?? 0;
+                      Navigator.pop(context, paperNum);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -374,6 +374,7 @@ Future<String> showPrintingNoDialog({
               // Optional text input field
               TextField(
                 controller: textController,
+                keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: "أضف خياراً آخر)",
                   border: OutlineInputBorder(),
@@ -388,21 +389,21 @@ Future<String> showPrintingNoDialog({
         actions: [
           TextButton(
             onPressed: () {
-              if (statusType == '') {
-                statusType = textController.text.trim();
+              try {
+                paperNum = int.parse(textController.text.trim());
+              } catch (e) {
+                paperNum = 1;
+                showToast("تاكد من كتابة الارقام بطريقة صحيحة",
+                    SnackBarType.fail, context);
               }
-
-              if (statusType.isNotEmpty) {
-                Navigator.pop(context, {statusType});
-              } else {
-                Navigator.pop(context, {statusType});
-              }
+              paperNum = int.tryParse(textController.text.trim()) ?? 1;
+              Navigator.pop(context, {paperNum});
             },
             child: const Text("تأكيد", style: TextStyle(color: Colors.black)),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, 1);
             },
             child: const Text("إلغاء", style: TextStyle(color: Colors.black)),
           ),
@@ -412,7 +413,7 @@ Future<String> showPrintingNoDialog({
   );
 
   // Return the selected status and optional comment
-  return statusType;
+  return paperNum;
 }
 
 //Show a toast

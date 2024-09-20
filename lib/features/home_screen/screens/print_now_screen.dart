@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/core/shared/components.dart';
@@ -25,8 +26,9 @@ class PrintNowScreen extends StatefulWidget {
 class PrintNowPageState extends State<PrintNowScreen> {
   TextEditingController moreRequirement = TextEditingController();
   TextEditingController discountText = TextEditingController();
-  int numberOfPapers = 1;
+  ValueNotifier<int> numberOfPapers = ValueNotifier<int>(1);
   double totalPrice = 0.0;
+  FormFieldState<int>? formFieldState = FormFieldState<int>();
 
   bool fileUploaded = false;
   String fileName = "";
@@ -238,59 +240,71 @@ class PrintNowPageState extends State<PrintNowScreen> {
                   ),
                 ),
               ),
-              InkWell(
-                onTap: () async {
-                  var noPaper = await showPrintingNoDialog(context: context);
-                  try {
-                    numberOfPapers = int.parse(noPaper);
-                  } catch (e) {
-                    showToast("تاكد من كتابة الارقام بطريقة صحيحة",
-                        SnackBarType.fail, context);
-                    numberOfPapers = 1;
-                  }
-                  setState(() {});
-                },
-                child: Container(
-                  padding: const EdgeInsets.only(top: 15, right: 10, left: 10),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.grey.withOpacity(0.1),
-                  ),
-                  width: getWidth(80, context),
-                  child: Center(
-                    child: IncrementDecrementFormField<int>(
-                      // an initial value
-                      initialValue: numberOfPapers,
-                      // if no value set 0, otherwise display the value as a string
-                      displayBuilder: (value, field) {
-                        return Text(
-                          value == null ? "1" : value.toString(),
-                        );
-                      },
-                      onDecrement: (currentValue) {
-                        if (currentValue! <= 1) {
-                          return 1;
-                        }
-                        setState(() {
-                          numberOfPapers = currentValue - 1;
-                        });
-                        totalPrice = calculatePrice();
+              ValueListenableBuilder(
+                valueListenable: numberOfPapers,
+                builder: (context, value, child) {
+                  return InkWell(
+                    onTap: () async {
+                      var noPaper =
+                          await showPrintingNoDialog(context: context);
+                      print(noPaper);
+                      numberOfPapers.value = noPaper;
+                      formFieldState?.didChange(noPaper);
 
-                        return numberOfPapers;
-                      },
+                      totalPrice = await calculatePrice();
 
-                      onIncrement: (currentValue) {
-                        setState(() {
-                          numberOfPapers = currentValue! + 1;
-                        });
-                        totalPrice = calculatePrice();
+                      setState(() {});
+                    },
+                    child: Container(
+                      padding:
+                          const EdgeInsets.only(top: 15, right: 10, left: 10),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.grey.withOpacity(0.1),
+                      ),
+                      width: getWidth(80, context),
+                      child: Center(
+                        child: IncrementDecrementFormField<int>(
+                          autovalidateMode: AutovalidateMode.always,
+                          onSaved: (value) {
+                            numberOfPapers.value = value!;
+                          },
 
-                        return numberOfPapers;
-                      },
+                          // an initial value
+                          initialValue: numberOfPapers.value,
+                          // if no value set 0, otherwise display the value as a string
+                          displayBuilder: (value, field) {
+                            formFieldState = field;
+                            return Text(
+                              value == null ? "1" : value.toString(),
+                            );
+                          },
+                          onDecrement: (currentValue) {
+                            if (currentValue! <= 1) {
+                              return 1;
+                            }
+                            setState(() {
+                              numberOfPapers.value = currentValue - 1;
+                            });
+                            totalPrice = calculatePrice();
+
+                            return numberOfPapers.value;
+                          },
+
+                          onIncrement: (currentValue) {
+                            setState(() {
+                              numberOfPapers.value = currentValue! + 1;
+                            });
+                            totalPrice = calculatePrice();
+
+                            return numberOfPapers.value;
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
               // Padding(
               //   padding: const EdgeInsets.all(15.0),
@@ -473,7 +487,7 @@ class PrintNowPageState extends State<PrintNowScreen> {
     }
 
     // Multiply by the number of papers
-    return basePrice * numberOfPapers;
+    return basePrice * numberOfPapers.value;
   }
 
   void _pickFile() async {

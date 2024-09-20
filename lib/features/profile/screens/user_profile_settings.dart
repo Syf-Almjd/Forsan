@@ -89,9 +89,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       return null;
                     },
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
                   // TextFormField(
                   //   controller: email,
                   //   decoration: InputDecoration(
