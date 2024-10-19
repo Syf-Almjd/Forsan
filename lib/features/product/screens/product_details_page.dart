@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 
 import 'package:forsan/core/shared/components.dart';
 import 'package:forsan/domain/models/order_model.dart';
 import 'package:forsan/state/app_data_cubit/app_cubit.dart';
-import 'package:forsan/state/navigation_cubit/navi_cubit.dart';
 import '../../../domain/models/product_model.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -86,10 +84,8 @@ class _DetailsPageState extends State<DetailsPage> {
                       Container(height: 25.0, color: Colors.grey, width: 1.0),
                       InkWell(
                         onTap: () async {
-                          showToast("تمت الاضافة للسلة", SnackBarType.success,
-                              context);
-
-                          NaviCubit.get(context).pop(context);
+                          // showToast("تمت الاضافة للسلة", SnackBarType.success,
+                          //     context);
 
                           await productItemToOrder(
                               widget.product, generatedCode);
@@ -249,7 +245,9 @@ class _DetailsPageState extends State<DetailsPage> {
         orderStatus: "لم يدفع",
         orderType: 'product',
         orderPackaging: '');
-    await AppCubit.get(context).uploadUserOrders(orderData, context);
+    if (mounted) {
+      await AppCubit.get(context).uploadUserOrders(orderData, context);
+    }
   }
 
   selectCard(cardTitle) {

@@ -135,8 +135,9 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
         points: '10.00');
     UserSingleton().userDataToBeUploaded = userData;
 
-    AppCubit.get(context).saveSharedMap('currentuser', userData.toJson()).then(
-        (value) => AppCubit.get(context)
+    await AppCubit.get(context)
+        .saveSharedMap('currentuser', userData.toJson())
+        .then((value) => AppCubit.get(context)
             .userRegister(UserSingleton().userDataToBeUploaded, context));
   }
 

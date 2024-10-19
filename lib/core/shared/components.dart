@@ -320,9 +320,9 @@ Future<int> showPrintingNoDialog({
   Map<String, int> orderStatusList = {
     'نسخة واحده': 1,
     'نسختين': 2,
-    'ثلاث نسخ': 3,
-    'اربع نسخ': 4,
-    'خمس نسخ': 5,
+    '٣ نسخ': 3,
+    '٤ نسخ': 4,
+    '٥ نسخ': 5,
   };
   int paperNum = 1;
   TextEditingController textController =

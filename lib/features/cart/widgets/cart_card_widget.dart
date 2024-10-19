@@ -5,7 +5,7 @@ import 'package:forsan/domain/models/order_model.dart';
 import 'package:forsan/core/shared/components.dart';
 import 'package:forsan/core/utils/managers/app_assets.dart';
 import 'package:forsan/features/cart/screens/order_info_page.dart';
-import 'package:forsan/features/cart/screens/payment/PaymentPage.dart';
+import 'package:forsan/features/cart/screens/payment/payment_page.dart';
 import 'package:forsan/features/cart/screens/payment/order_receipt.dart';
 import 'package:forsan/features/home_screen/widgets/choose_file_widget.dart';
 import 'package:forsan/state/app_data_cubit/app_cubit.dart';
@@ -33,15 +33,9 @@ class _CartCardWidgetState extends State<CartCardWidget> {
       padding: const EdgeInsets.all(15.0),
       child: InkWell(
         onTap: () {
-          if (widget.isHistory) {
-            NaviCubit.get(context)
-                .navigate(context, OrderReceiptPage(orderModel: widget.order));
-            return;
-          }
           if (widget.order.orderStatus == "لم يدفع") {
             NaviCubit.get(context)
                 .navigate(context, PaymentPage(order: widget.order));
-            // showToast("تم الدفع مسب?قًا", SnackBarType.error, context);
             return;
           } else {
             NaviCubit.get(context)

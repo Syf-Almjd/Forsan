@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/cart/screens/qrcode_scanner_page.dart';
 import 'package:forsan/features/cart/screens/history_cart_page.dart';
 import 'package:forsan/features/cart/widgets/cart_card_widget.dart';
 import 'package:forsan/state/app_data_cubit/app_cubit.dart';
@@ -23,7 +24,9 @@ class _CartPageState extends State<CartPage> {
     return RefreshIndicator(
       onRefresh: () async {
         await Future.delayed(const Duration(seconds: 2));
-        setState(() {});
+        if (mounted) {
+          setState(() {});
+        }
       },
       child: Column(
         children: [
@@ -32,7 +35,7 @@ class _CartPageState extends State<CartPage> {
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20)),
-                color: Colors.amber),
+                color: Colors.amberAccent),
             padding: const EdgeInsets.all(10.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +50,7 @@ class _CartPageState extends State<CartPage> {
                     checkNOpenUrl("tel:+966501510093", context);
                   },
                   child: Container(
-                    width: getWidth(40, context),
+                    width: getWidth(30, context),
                     height: getHeight(8, context),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.horizontal(
@@ -77,13 +80,47 @@ class _CartPageState extends State<CartPage> {
                 const Spacer(),
                 InkWell(
                   onTap: () {
+                    NaviCubit.get(context)
+                        .navigate(context, const QRCodeScannerPage());
+                  },
+                  child: Container(
+                    width: getWidth(25, context),
+                    height: getHeight(8, context),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.horizontal(
+                            left: Radius.circular(10),
+                            right: Radius.circular(10)),
+                        color: Colors.orange),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.qr_code_scanner,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                        Text(
+                          "مسح QR",
+                          style: fontAlmarai(
+                              fontWeight: FontWeight.w900,
+                              size: getWidth(3, context),
+                              textColor: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                InkWell(
+                  onTap: () {
                     // showToast("اختر الطلب لدفع", SnackBarType.alert, context);
                     NaviCubit.get(context)
                         .navigate(context, const HistoryCartPage());
                     // UrlLauncher.launch('mailto:${widget.email.toString()}');
                   },
                   child: Container(
-                    width: getWidth(40, context),
+                    width: getWidth(30, context),
                     height: getHeight(8, context),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.horizontal(
@@ -154,9 +191,8 @@ class _CartPageState extends State<CartPage> {
                   ],
                 ));
               }
-              (snapshot.data as List<OrderModel>).sort(
-                  (OrderModel a, OrderModel b) =>
-                      b.orderDate.compareTo(a.orderDate));
+              snapshot.data.sort((OrderModel a, OrderModel b) =>
+                  b.orderDate.compareTo(a.orderDate));
 
               return Expanded(
                 child: ListView.builder(
@@ -166,7 +202,6 @@ class _CartPageState extends State<CartPage> {
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) => CartCardWidget(
                     order: snapshot.data[index],
-                    // Reverse the list and then access items
                     onTap: () {
                       setState(() {});
                     },

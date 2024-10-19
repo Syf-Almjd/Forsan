@@ -10,6 +10,7 @@ import 'package:forsan/core/shared/components.dart';
 import 'package:forsan/domain/models/order_model.dart';
 import 'package:forsan/domain/models/user_contact_model.dart';
 import 'package:forsan/domain/models/user_model.dart';
+import 'package:forsan/domain/models/user_payment_model.dart';
 import 'package:forsan/features/home_screen/widgets/choose_file_widget.dart';
 import 'package:forsan/state/navigation_cubit/navi_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,24 +64,23 @@ class AppCubit extends Cubit<AppStates> {
     return firebaseCData;
   }
 
-  uploadFullOrder(OrderModel orderModel, file, context) async {
-    try {
-      showLoadingDialog(context);
-      await uploadUserOrders(orderModel, context);
-      // await uploadToAllOrders(orderModel, context);
-      await uploadUserFiles(file, orderModel, context);
-      NaviCubit.get(context).pop(context, forced: true);
-      NaviCubit.get(context).pop(context);
-      BlocProvider.of<BaBBloc>(context).add(TabChange(1));
-      emit(GetDataSuccessful());
-    } catch (e) {
-      NaviCubit.get(context).pop(context);
-      showToast("خطا", SnackBarType.fail, context);
-      print(e.toString());
-      showToast(e.toString(), SnackBarType.fail, context);
-      emit(GetDataError());
-    }
-  }
+  // uploadFullOrder(OrderModel orderModel, file, context) async {
+  //   try {
+  //     showLoadingDialog(context);
+  //     await uploadUserOrders(orderModel, context);
+  //     // await uploadToAllOrders(orderModel, context);
+  //     NaviCubit.get(context).pop(context, forced: true);
+  //     NaviCubit.get(context).pop(context);
+  //     BlocProvider.of<BaBBloc>(context).add(TabChange(1));
+  //     emit(GetDataSuccessful());
+  //   } catch (e) {
+  //     NaviCubit.get(context).pop(context);
+  //     showToast("خطا", SnackBarType.fail, context);
+  //     print(e.toString());
+  //     showToast(e.toString(), SnackBarType.fail, context);
+  //     emit(GetDataError());
+  //   }
+  // }
 
   // Future<void> uploadToAllOrders(OrderModel order, context) async {
   //   try {
@@ -119,23 +119,91 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  Future<void> sendUserPaymentMessage(UserPaymentModel payment) async {
+    try {
+      emit(GettingData());
+      await FirebaseFirestore.instance
+          .collection('payments')
+          .doc(payment.timestamp.toString())
+          .set(payment.toJson());
+      emit(GetDataSuccessful());
+    } catch (e) {
+      emit(GetDataError());
+    }
+  }
+
+  Future<OrderModel?> getOrderById(String userId, String orderId,
+      {String? collection = "userOrders"}) async {
+    try {
+      // Emit loading state if needed
+      emit(GettingData());
+
+      // Reference to the specific order document
+      DocumentReference orderDocument = FirebaseFirestore.instance
+          .collection('orders')
+          .doc(userId)
+          .collection(collection!)
+          .doc(orderId);
+
+      // Fetch the order document
+      DocumentSnapshot orderSnapshot = await orderDocument.get();
+
+      // Check if the document exists
+      if (orderSnapshot.exists) {
+        // Fetch the sub-collection data
+        OrderModel orderDataList =
+            OrderModel.fromJson(orderSnapshot.data() as Map<String, dynamic>);
+
+        // Emit successful state
+        emit(GetDataSuccessful());
+
+        // Return the first OrderModel or null if needed
+        return orderDataList;
+      } else {
+        if (collection == "userOrders") {
+          return getOrderById(userId, orderId, collection: "finishedOrders");
+        } else {
+          emit(GetDataError());
+          return null;
+        }
+      }
+    } catch (e) {
+      // Emit error state
+      emit(GetDataError());
+      // Return null or rethrow the error if needed
+      return null;
+    }
+  }
+
   Future<void> uploadUserOrders(OrderModel order, context) async {
     try {
+      showLoadingDialog(context);
+
+      await deleteUserTempFile(justRefDel: true);
+      IconSnackBar.show(context,
+          snackBarType: SnackBarType.success, label: "يتم ارسال طلبك...");
+
       emit(GettingData());
       var firebaseDocRef = FirebaseFirestore.instance
           .collection('orders')
           .doc(FirebaseAuth.instance.currentUser?.uid);
+      // IconSnackBar.show(context,
+      //     snackBarType: SnackBarType.success, label: "يتم الآن معالجة ملفك...");
+
       await firebaseDocRef.set({"updated": DateTime.now()});
 
       await firebaseDocRef
           .collection('userOrders')
           .doc(order.orderId)
           .set(order.toJson());
-      IconSnackBar.show(context,
-          snackBarType: SnackBarType.success, label: "يتم ارسال طلبك...");
+      NaviCubit.get(context).pop(context);
+      NaviCubit.get(context).pop(context);
       emit(GetDataSuccessful());
     } catch (e) {
+      NaviCubit.get(context).pop(context);
+
       emit(GetDataError());
+      print(e);
       // IconSnackBar.show(context,
       // snackBarType: SnackBarType.success, label: 'حاول مرة أخرى');
     }
@@ -302,43 +370,90 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  Future<void> uploadUserFiles(userFile, OrderModel order, context) async {
+  Future<void> deleteUserTempFile({bool justRefDel = false}) async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (justRefDel) {
+      await FirebaseFirestore.instance
+          .collection('tempData')
+          .doc(userId)
+          .delete();
+      return;
+    }
+    try {
+      if (userId == null) {
+        throw Exception("No authenticated user.");
+      }
+
+      // Fetch the document from Firestore
+      final response = await FirebaseFirestore.instance
+          .collection('tempData')
+          .doc(userId)
+          .get();
+
+      // Check if the document has data
+      final data = response.data();
+      if (data != null && data.containsKey('file')) {
+        final filePath = data['file'];
+        if (filePath != null) {
+          // Delete the file from Firebase Storage
+          await FirebaseStorage.instance.refFromURL(filePath).delete();
+        } else {
+          // throw Exception("File path is null.");
+        }
+      } else {
+        // throw Exception("No file found in user temp data.");
+      }
+    } catch (e) {
+      // Log or handle the error appropriately
+      print("Error deleting user temp file: $e");
+    }
+  }
+
+  Future<String?> uploadUserFiles(userFile, context) async {
     emit(GettingData());
     // IconSnackBar.show(context,
     //     snackBarType: SnackBarType.success, label: "يتم الآن معالجة طلبك...");
+    print('saif1');
 
-    var path = '/userOrderFiles/${userFile.name}';
+    await deleteUserTempFile();
+    print('saif2');
+
+    var path =
+        '/userOrderFiles/${DateTime.now().toUtc().toIso8601String().replaceAll(':', '_').replaceAll('-', '_').replaceAll('.', '_')}_${userFile.name}';
     final file = File(userFile.path);
     final ref = FirebaseStorage.instance.ref().child(path);
-    IconSnackBar.show(context,
-        snackBarType: SnackBarType.success, label: "تم تحميل الملف...");
+    // IconSnackBar.show(context,
+    //     snackBarType: SnackBarType.success, label: "تم تحميل الملف...");
+    print('saif3');
 
     try {
       var uploadTask = await ref.putFile(file);
+      print('saif4');
+
       var getFileLink = await uploadTask.ref.getDownloadURL();
+      print('saif5');
 
-      var docRef = FirebaseFirestore.instance
-          .collection('orders')
+      await FirebaseFirestore.instance
+          .collection('tempData')
           .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection("userOrders")
-          .doc(order.orderId);
-      // IconSnackBar.show(context,
-      //     snackBarType: SnackBarType.success,
-      //     label: "نجحت معالجة ورفع الملف... ");
-
-      await docRef.update({'orderFile': getFileLink});
-      IconSnackBar.show(context,
-          snackBarType: SnackBarType.success,
-          label: "🤗 يتم الان تجهيز طلبك...");
+          .set(
+        {'date': DateTime.now(), 'file': getFileLink},
+      );
+      print('saif6');
 
       emit(GetDataSuccessful());
+      return getFileLink;
     } catch (error) {
-      attempts++;
-      if (attempts < 3) {
-        await uploadUserFiles(userFile, order, context); // Retry the upload
-      } else {
-        emit(GetDataError());
-      }
+      print("error");
+      print(error);
+      // attempts++;
+      // if (attempts < 3) {
+      // return await uploadUserFiles(userFile, context); // Retry the upload
+      // } else {
+      emit(GetDataError());
+      return null;
+      // }
     }
   }
 
@@ -457,7 +572,7 @@ class AppCubit extends Cubit<AppStates> {
     emit(UpdatingLocalData());
     try {
       var getData = await getUserData();
-      saveSharedMap('currentuser', getData.toJson());
+      await saveSharedMap('currentuser', getData.toJson());
       if (getData.email == "guest@forsan.com") {
         isGuestMode = true;
       }

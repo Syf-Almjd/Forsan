@@ -19,15 +19,11 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+class HomePageState extends State<HomePage> {
   TextEditingController searchTF = TextEditingController();
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Column(
       children: [
         Container(
@@ -258,7 +254,46 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                           itemBuilder: (context, index) {
                             return rowHomeItems(
                               name: studentServicesList[index],
-                              img: studentServiceImgs[index],
+                              img: studentServicesImgs[index],
+                              onTap: (title) {
+                                NaviCubit.get(context).navigate(
+                                    context, OtherServicesScreen(title));
+                              },
+                            );
+                          }),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      ":خدمات الطباعة الطلابية",
+                      style: fontAlmarai(size: getWidth(7, context)),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blueGrey.withOpacity(0.2),
+                      borderRadius: const BorderRadius.horizontal(
+                          left: Radius.circular(30)),
+                    ),
+                    child: SizedBox(
+                      height: 180,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: studentPrintingList.length,
+                          itemBuilder: (context, index) {
+                            return rowHomeItems(
+                              name: studentPrintingList[index],
+                              img: studentPrintingImgs[index],
                               onTap: (title) {
                                 NaviCubit.get(context)
                                     .navigate(context, PrintNowScreen(title));
@@ -297,7 +332,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                           itemCount: advServicesList.length,
                           itemBuilder: (context, index) {
                             List<String> advList =
-                                studentServiceImgs.reversed.toList();
+                                advServiceImgs.reversed.toList();
                             return rowHomeItems(
                               name: advServicesList[index],
                               img: advList[index],

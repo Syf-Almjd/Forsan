@@ -73,7 +73,7 @@ class OurPolicies extends StatelessWidget {
             getCube(2, context),
             const Text(
               "يلزم دفع المبلغ مسبقا,"
-              "للدعم الفني أو الشكاوى، يمكنك التواصل معنا\n\nforsan.print@gmail.com \n 051236432",
+              "للدعم الفني أو الشكاوى، يمكنك التواصل معنا\n\nforsan.print@gmail.com \n 0501510093",
               textAlign: TextAlign.right,
             ),
             getCube(5, context),

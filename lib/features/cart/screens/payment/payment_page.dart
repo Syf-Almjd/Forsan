@@ -73,9 +73,10 @@ class _PaymentPageState extends State<PaymentPage> {
                   padding: const WidgetStatePropertyAll(EdgeInsets.all(20)),
                   backgroundColor:
                       WidgetStateProperty.all<Color>(Colors.green)),
-              onPressed: () {
+              onPressed: () async {
                 widget.order.orderStatus = "الدفع كاش";
-                AppCubit.get(context).updateUserOrders(widget.order, context);
+                await AppCubit.get(context)
+                    .updateUserOrders(widget.order, context);
                 showToast("الدفع كاش", SnackBarType.success, context);
                 NaviCubit.get(context).pop(context);
               },

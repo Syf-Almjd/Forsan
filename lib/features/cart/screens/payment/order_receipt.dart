@@ -197,7 +197,7 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
                     ],
                   ),
                   const SizedBox(height: 5),
-                  if ("product" != model.orderType ||
+                  if ("product" != model.orderType &&
                       "service" != model.orderType)
                     ...listOfOrderDetails,
                   Row(
@@ -265,7 +265,7 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
                       Directionality(
                         textDirection: TextDirection.ltr,
                         child: Text(
-                          "+966 50 569 8771",
+                          "0501510093",
                           style: TextStyle(
                             color: Colors.black54,
                             fontWeight: FontWeight.w400,
@@ -278,7 +278,7 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "forsanpr@gmail.com",
+                        "forsan.print@gmail.com",
                         style: TextStyle(
                           color: Colors.black54,
                           fontWeight: FontWeight.w400,
@@ -303,31 +303,30 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: appCustomBar("مستند الطلب", context),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
+      appBar: appCustomBar("تأكيد الطلب", context),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            //   SizedBox(
-            //     child: TextButton.icon(
-            //       onPressed: () async {
-            //         await printReceipt();
-            //       },
-            //       icon: const Icon(Icons.receipt_long_outlined,
-            //           color: Colors.black),
-            //       label: const Text(
-            //         'تنزيل ومشاركة الفاتورة',
-            //         style: TextStyle(color: Colors.black),
-            //       ),
-            //     ),
-            //   ),
-            //   const SizedBox(height: 20),
-            //   Expanded(
-            //     child: SingleChildScrollView(
-            //       child: saveConfirmedData(widget.orderModel, false),
-            //     ),
-            //   ),
+            SizedBox(
+              child: TextButton.icon(
+                onPressed: () async {
+                  await printReceipt();
+                },
+                icon: const Icon(Icons.print_outlined, color: Colors.black),
+                label: const Text(
+                  'طباعة وتنزيل الفاتورة',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: SingleChildScrollView(
+                child: saveConfirmedData(widget.orderModel, false),
+              ),
+            ),
           ],
         ),
       ),
@@ -342,13 +341,13 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
       // Size printingSize = await showOrderPrintDialog(context: context);
       showLoadingDialog(context);
       await screenshotController
-          .captureFromWidget(await saveConfirmedData(widget.orderModel, true),
+          .captureFromWidget(saveConfirmedData(widget.orderModel, true),
               targetSize: const Size(800, 1200), pixelRatio: 2.0)
-          .then((imageBytes) {
-        fromImageSavePDF(imageBytes);
+          .then((imageBytes) async {
+        await fromImageSavePDF(imageBytes);
       });
     } catch (error) {
-      showToast("حدث خطأ: ${error.toString()}", SnackBarType.fail, context);
+      showToast(error.toString(), SnackBarType.fail, context);
     } finally {
       Navigator.of(context).pop();
     }

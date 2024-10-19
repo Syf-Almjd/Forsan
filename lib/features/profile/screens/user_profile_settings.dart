@@ -21,6 +21,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _isObscure = true;
   bool changePassBtn = false;
+  bool isImageLoading = false;
   String? _imageBytes;
   final textForm = GlobalKey<FormState>();
 
@@ -52,7 +53,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   width: getWidth(40, context),
                   height: getHeight(18, context),
                   child: InkWell(
-                    onTap: _pickImage,
+                    onTap: () {
+                      if (!isImageLoading) {
+                        _pickImage();
+                      }
+                    },
                     child: Stack(
                       children: [
                         Center(
@@ -242,6 +247,8 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _pickImage() async {
+    isImageLoading = true;
+
     final picker = ImagePicker();
     final pickedFile =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 25);
@@ -252,5 +259,6 @@ class _SettingsPageState extends State<SettingsPage> {
         _imageBytes = base64Encode(bytesUint8List);
       });
     }
+    isImageLoading = false;
   }
 }

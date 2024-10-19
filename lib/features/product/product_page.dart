@@ -96,12 +96,12 @@ class _ProductsPageState extends State<ProductsPage> {
           height: getHeight(5, context), //height for overall container
           child: ListView.builder(
             physics: const BouncingScrollPhysics(),
-            itemCount: ProductListType.length,
+            itemCount: productListType.length,
             shrinkWrap: true,
             reverse: true,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) =>
-                ProductTypeWidget(ProductListType[index], () {
+                ProductTypeWidget(productListType[index], () {
               setState(() {
                 isReversed = !isReversed;
               });

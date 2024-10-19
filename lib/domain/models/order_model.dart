@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class OrderModel {
   String orderId;
   String orderUser;
@@ -35,69 +37,48 @@ class OrderModel {
     required this.orderStatus,
   });
 
-  // Factory method to create an Order object from a JSON map
+  // Factory method to create an OrderModel object from a JSON map
   factory OrderModel.fromJson(Map<String, dynamic> json) {
-    try {
-      return OrderModel(
-        orderId: json['orderId'] ?? "",
-        orderDate: DateTime.tryParse(json['orderDate'])?.toLocal() ??
-            DateTime.now().toLocal(),
-        orderFile: json['orderFile'] ?? "",
-        orderDiscount: json['orderDiscount'] ?? "",
-        orderTitle: json['orderTitle'] ?? "",
-        orderUserName: json['orderUserName'] ?? "",
-        orderPrice: json['orderPrice'] ?? "",
-        orderColor: json['orderColor'] ?? "",
-        orderPackaging: json['orderPackaging'] ?? "",
-        orderSize: json['orderSize'] ?? "",
-        orderPadding: json['orderPadding'] ?? "",
-        orderPaper: json['orderPaper'] ?? "",
-        orderDescription: json['orderDescription'] ?? "",
-        orderStatus: json['orderStatus'] ?? "",
-        orderUser: json['orderUser'] ?? "",
-        orderType: json['orderType'] ?? "",
-      );
-    } catch (e) {
-      return OrderModel(
-        orderColor: json['orderColor'] ?? "",
-        orderDescription: json['orderDescription'] ?? "",
-        orderFile: json['orderFile'] ?? "",
-        orderId: json['orderId'] ?? "",
-        orderPadding: json['orderPadding'] ?? "",
-        orderPaper: json['orderPaper'] ?? "",
-        orderPrice: json['orderPrice'] ?? "",
-        orderSize: json['orderSize'] ?? "",
-        orderStatus: json['orderStatus'] ?? "",
-        orderTitle: json['orderTitle'] ?? "",
-        orderType: json['orderType'] ?? "",
-        orderUser: json['orderUser'] ?? "",
-        orderDate: DateTime.now().toLocal(),
-        orderDiscount: '',
-        orderUserName: '',
-        orderPackaging: '',
-      );
-    }
+    return OrderModel(
+      orderId: json['orderId'] ?? "",
+      orderDate: (json['orderDate'] as Timestamp?)?.toDate().toLocal() ??
+          DateTime.now().toLocal(),
+      orderType: json['orderType'] ?? "",
+      orderUser: json['orderUser'] ?? "",
+      orderUserName: json['orderUserName'] ?? "",
+      orderFile: json['orderFile'] ?? "",
+      orderDiscount: json['orderDiscount'] ?? "",
+      orderTitle: json['orderTitle'] ?? "",
+      orderPrice: json['orderPrice'] ?? "",
+      orderColor: json['orderColor'] ?? "",
+      orderSize: json['orderSize'] ?? "",
+      orderPadding: json['orderPadding'] ?? "",
+      orderPackaging: json['orderPackaging'] ?? "",
+      orderPaper: json['orderPaper'] ?? "",
+      orderDescription: json['orderDescription'] ?? "",
+      orderStatus: json['orderStatus'] ?? "",
+    );
   }
 
-  // Convert the Order object to a JSON map
+  // Convert the OrderModel object to a JSON map
   Map<String, dynamic> toJson() {
     return {
       'orderId': orderId,
-      'orderFile': orderFile,
       'orderDate': orderDate,
+      'orderType': orderType,
+      'orderUser': orderUser,
+      'orderUserName': orderUserName,
+      'orderFile': orderFile,
+      'orderDiscount': orderDiscount,
       'orderTitle': orderTitle,
       'orderPrice': orderPrice,
-      'orderDiscount': orderDiscount,
       'orderColor': orderColor,
-      'orderType': orderType,
-      'orderPackaging': orderPackaging,
       'orderSize': orderSize,
       'orderPadding': orderPadding,
+      'orderPackaging': orderPackaging,
       'orderPaper': orderPaper,
-      'orderStatus': orderStatus,
-      'orderUserName': orderUserName,
-      'orderUser': orderUser,
       'orderDescription': orderDescription,
+      'orderStatus': orderStatus,
     };
   }
 }
