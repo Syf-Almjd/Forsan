@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/domain/auth_router.dart';
 import 'package:forsan/state/app_data_cubit/app_cubit.dart';
 

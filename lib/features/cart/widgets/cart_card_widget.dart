@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/domain/models/order_model.dart';
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/core/utils/managers/app_assets.dart';
 import 'package:forsan/features/cart/screens/order_info_page.dart';
 import 'package:forsan/features/cart/screens/payment/payment_page.dart';

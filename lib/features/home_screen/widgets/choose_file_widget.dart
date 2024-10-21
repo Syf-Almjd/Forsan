@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/shared/components.dart';
+import '../../shared/components.dart';
 
 class ChooseFileWidget extends StatefulWidget {
   final List<String> name;

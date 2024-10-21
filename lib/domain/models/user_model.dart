@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 class UserModel {
-
   String userID;
   String name;
   String email;
@@ -22,8 +21,6 @@ class UserModel {
     required this.points,
   });
 
-
-
   factory UserModel.loadingUser() {
     return UserModel(
       userID: "",
@@ -34,7 +31,7 @@ class UserModel {
       password: "يتم التحديث",
       address: "يتم التحديث",
       phoneNumber: "يتم التحديث",
-      points: "يتم التحديث",
+      points: "10.0",
     );
   }
   Map<String, dynamic> toJson() {
@@ -47,9 +44,9 @@ class UserModel {
       'address': address,
       'phoneNumber': phoneNumber,
       'points': points,
-
     };
   }
+
   // Create a UserModel object from a JSON map
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -76,4 +73,3 @@ class UserModel {
     return UserModel.fromJson(jsonMap);
   }
 }
-

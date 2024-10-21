@@ -115,9 +115,9 @@ List<String> moreServiceImge = [
 
 Map<String, String> socialMediaList = {
   "https://upload.wikimedia.org/wikipedia/en/thumb/0/04/Facebook_f_logo_%282021%29.svg/1200px-Facebook_f_logo_%282021%29.svg.png":
-      "https://www.facebook.com/AlforsanPrinting0024/",
+      "https://m.facebook.com/ForsanPt/",
   "https://i0.wp.com/aimanpsikologi.com/wp-content/uploads/2018/01/instagram-colourful-icon.png?ssl=1":
-      "https://www.instagram.com/forsanpr/",
+      "https://www.instagram.com/forsan.pr?igsh=MWU3eHg1NGpleTNoMg%3D%3D&utm_source=qr",
   "https://cdn-icons-png.flaticon.com/512/124/124034.png?w=360":
       "https://wa.me/+966501510093",
   "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/800px-Telegram_2019_Logo.svg.png":
@@ -147,14 +147,14 @@ List<String> otherServiceImgs = [
   "https://images.unsplash.com/photo-1534540884684-d9bf0ba86306?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=327&q=80",
   "https://images.unsplash.com/photo-1534540884684-d9bf0ba86306?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=327&q=80",
 ];
-List<String> serviceImgsFB = [
-  "https://firebasestorage.googleapis.com/v0/b/forsanprinting.appspot.com/o/Screenshot_20230704_124539.png?alt=media&token=2efd4546-eb3c-469f-bda1-92937da08301",
-  "https://firebasestorage.googleapis.com/v0/b/forsanprinting.appspot.com/o/Screenshot_20230704_124539.png?alt=media&token=2efd4546-eb3c-469f-bda1-92937da08301",
-  "https://firebasestorage.googleapis.com/v0/b/forsanprinting.appspot.com/o/Screenshot_20230704_124539.png?alt=media&token=2efd4546-eb3c-469f-bda1-92937da08301",
-  "https://firebasestorage.googleapis.com/v0/b/forsanprinting.appspot.com/o/Screenshot_20230704_124539.png?alt=media&token=2efd4546-eb3c-469f-bda1-92937da08301",
-  "https://firebasestorage.googleapis.com/v0/b/forsanprinting.appspot.com/o/Screenshot_20230704_124539.png?alt=media&token=2efd4546-eb3c-469f-bda1-92937da08301",
-  "https://firebasestorage.googleapis.com/v0/b/forsanprinting.appspot.com/o/Screenshot_20230704_124539.png?alt=media&token=2efd4546-eb3c-469f-bda1-92937da08301",
-];
+// List<String> serviceImgsFB = [
+//   "https://firebasestorage.googleapis.com/v0/b/forsanprinting.appspot.com/o/Screenshot_20230704_124539.png?alt=media&token=2efd4546-eb3c-469f-bda1-92937da08301",
+//   "https://firebasestorage.googleapis.com/v0/b/forsanprinting.appspot.com/o/Screenshot_20230704_124539.png?alt=media&token=2efd4546-eb3c-469f-bda1-92937da08301",
+//   "https://firebasestorage.googleapis.com/v0/b/forsanprinting.appspot.com/o/Screenshot_20230704_124539.png?alt=media&token=2efd4546-eb3c-469f-bda1-92937da08301",
+//   "https://firebasestorage.googleapis.com/v0/b/forsanprinting.appspot.com/o/Screenshot_20230704_124539.png?alt=media&token=2efd4546-eb3c-469f-bda1-92937da08301",
+//   "https://firebasestorage.googleapis.com/v0/b/forsanprinting.appspot.com/o/Screenshot_20230704_124539.png?alt=media&token=2efd4546-eb3c-469f-bda1-92937da08301",
+//   "https://firebasestorage.googleapis.com/v0/b/forsanprinting.appspot.com/o/Screenshot_20230704_124539.png?alt=media&token=2efd4546-eb3c-469f-bda1-92937da08301",
+// ];
 
 List<String> productListType = [
   "الجديد",

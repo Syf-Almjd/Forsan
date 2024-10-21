@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/core/utils/styles/app_colors.dart';
 import 'package:forsan/domain/models/order_model.dart';
 import 'package:forsan/features/cart/screens/payment/order_receipt.dart';

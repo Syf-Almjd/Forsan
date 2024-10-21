@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/features/cart/screens/payment/order_receipt.dart';
 import 'package:forsan/features/home_screen/widgets/choose_file_widget.dart';
 import 'package:forsan/state/app_data_cubit/app_cubit.dart';

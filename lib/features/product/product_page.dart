@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/features/home_screen/screens/print_now_screen.dart';
 import 'package:forsan/features/product/widgets/product_type_widget.dart';
 import 'package:forsan/state/app_data_cubit/app_cubit.dart';

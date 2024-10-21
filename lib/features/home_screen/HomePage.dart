@@ -6,7 +6,7 @@ import 'package:forsan/core/utils/managers/app_assets.dart';
 import 'package:forsan/features/home_screen/screens/other_services_screen.dart';
 import 'package:forsan/features/vendor/contact_vendor.dart';
 
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/state/bottom_navi_bloc/ba_b_bloc.dart';
 import 'package:forsan/state/navigation_cubit/navi_cubit.dart';
 import '../../data/local/local_app_data.dart';

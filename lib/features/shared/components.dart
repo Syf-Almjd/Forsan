@@ -463,8 +463,8 @@ Future showChoiceDialog(
     String? title,
     String? content,
     bool showCancel = true,
-    String yesText = "Ok",
-    String noText = "Cancel",
+    String yesText = "نعم",
+    String noText = "لا",
     required Function onYes,
     Function? onNo}) {
   return (showCupertinoDialog(

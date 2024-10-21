@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/core/utils/managers/app_assets.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 

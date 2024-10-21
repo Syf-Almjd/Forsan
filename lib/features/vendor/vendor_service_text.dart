@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 
 import '../../data/local/local_app_data.dart';
 

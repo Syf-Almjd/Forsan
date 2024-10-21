@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/domain/models/user_model.dart';
 import 'package:forsan/features/profile/screens/user_profile_settings.dart';
 import 'package:forsan/features/profile/widgets/profile_menu_item_widget.dart';

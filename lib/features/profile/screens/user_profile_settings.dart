@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/domain/models/user_model.dart';
 import 'package:forsan/state/app_data_cubit/app_cubit.dart';
 import 'package:forsan/state/navigation_cubit/navi_cubit.dart';

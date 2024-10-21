@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:forsan/domain/models/order_model.dart';
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/domain/models/user_model.dart';
 import 'package:forsan/domain/models/user_payment_model.dart';
 import 'package:forsan/state/app_data_cubit/app_cubit.dart';

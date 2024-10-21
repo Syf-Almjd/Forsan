@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forsan/domain/models/product_model.dart';
 
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 
 class ProductCardView extends StatelessWidget {
   const ProductCardView(

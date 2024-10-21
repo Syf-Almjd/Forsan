@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/core/utils/managers/app_constants.dart';
 import 'package:forsan/domain/models/order_model.dart';
 import 'package:forsan/features/home_screen/widgets/choose_file_widget.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/features/cart/screens/qrcode_scanner_page.dart';
 import 'package:forsan/features/cart/screens/history_cart_page.dart';
 import 'package:forsan/features/cart/widgets/cart_card_widget.dart';

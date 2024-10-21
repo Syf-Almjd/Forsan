@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:forsan/core/shared/components.dart';
+import 'package:forsan/features/shared/components.dart';
 import 'package:forsan/domain/models/order_model.dart';
 import 'package:forsan/state/app_data_cubit/app_cubit.dart';
 import '../../../domain/models/product_model.dart';

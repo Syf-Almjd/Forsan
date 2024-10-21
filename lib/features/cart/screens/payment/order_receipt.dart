@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
+import 'package:forsan/features/shared/components.dart';
+import 'package:forsan/core/utils/managers/app_assets.dart';
 import 'package:forsan/core/utils/managers/app_constants.dart';
 import 'package:forsan/domain/models/order_model.dart';
-import 'package:forsan/core/shared/components.dart';
 import 'package:forsan/features/home_screen/widgets/choose_file_widget.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 
 class OrderReceiptPage extends StatefulWidget {
   final OrderModel orderModel;
@@ -20,38 +22,64 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
 
   saveConfirmedData(OrderModel model, sendToPrint) {
     var listOfOrderDetails = [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      TableRow(
         children: [
-          const Text("اللون:", style: TextStyle(fontWeight: FontWeight.w600)),
-          Text(model.orderColor),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child:
+                Text("اللون:", style: TextStyle(fontWeight: FontWeight.w600)),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(model.orderColor),
+          ),
         ],
       ),
-      const SizedBox(height: 5),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      TableRow(
         children: [
-          const Text("الحجم:", style: TextStyle(fontWeight: FontWeight.w600)),
-          Text(model.orderSize),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child:
+                Text("الحجم:", style: TextStyle(fontWeight: FontWeight.w600)),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(model.orderSize),
+          ),
         ],
       ),
-      const SizedBox(height: 5),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      TableRow(
         children: [
-          const Text("الخصم:", style: TextStyle(fontWeight: FontWeight.w600)),
-          Text(model.orderDiscount),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child:
+                Text("التغليف:", style: TextStyle(fontWeight: FontWeight.w600)),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(model.orderPackaging),
+          ),
         ],
       ),
-      const SizedBox(height: 5),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text("التغليف:", style: TextStyle(fontWeight: FontWeight.w600)),
-          Text(model.orderPackaging),
-        ],
-      ),
-      const SizedBox(height: 5),
+      // TableRow(
+      //   children: [
+      //     const Padding(
+      //       padding: EdgeInsets.all(8.0),
+      //       child:
+      //           Text("الملف:", style: TextStyle(fontWeight: FontWeight.w600)),
+      //     ),
+      //     Padding(
+      //       padding: const EdgeInsets.all(8.0),
+      //       child: Container(
+      //         height: 60,
+      //         child: SfBarcodeGenerator(
+      //           value: widget.orderModel.orderFile,
+      //           symbology: QRCode(),
+      //         ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
     ];
 
     return Directionality(
@@ -80,13 +108,49 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Access MediaQuery for responsive design
-            SizedBox(
-              width: double.infinity,
-              child: logoContainer(context),
-            ),
-            const SizedBox(height: 20),
+            if (!sendToPrint) logoContainer(context),
+            if (sendToPrint)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(50.0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    width: getWidth(90, context),
+                    height: getHeight(20, context),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(width: 2),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        const Text(
+                          "فاتورة",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 26),
+                          textAlign: TextAlign.center,
+                        ),
+                        // QrImageView(
+                        //   data: widget.orderModel.orderId,
+                        //   version: QrVersions.auto,
+                        //   size: 200.0,
+                        // ),
+                        SfBarcodeGenerator(
+                          value: widget.orderModel.orderId,
+                          symbology: QRCode(),
+                        ),
 
+                        const Image(
+                          image: AssetImage(AppAssets.assetsForsanNoBg),
+                          fit: BoxFit.contain,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             // Adjust the font size based on screen width
             Center(
               child: Text(
@@ -143,76 +207,135 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
               ),
             ),
             const SizedBox(height: 20),
-
-            Text(
-              "تفاصيل الطلب:",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: MediaQuery.of(context).size.width > 600 ? 18 : 16,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  "تفاصيل الطلب:",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: MediaQuery.of(context).size.width > 600 ? 18 : 16,
+                  ),
+                ),
+                // Text(
+                //   "تاريخ الاصدار : ${DateTime.now().year} - ${DateTime.now().month} - ${DateTime.now().day}",
+                //   style: TextStyle(
+                //     fontWeight: FontWeight.bold,
+                //     color: Colors.black,
+                //     fontSize: MediaQuery.of(context).size.width > 600 ? 18 : 16,
+                //   ),
+                // ),
+              ],
             ),
+
             const SizedBox(height: 10),
+
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal:
                       MediaQuery.of(context).size.width > 600 ? 80.0 : 20.0),
-              child: Column(
+              child: Table(
+                border: TableBorder.all(
+                  // Adding table borders for lines
+                  color: Colors.grey, // Border color
+                  width: 1, // Border width
+                ),
+                columnWidths: const {
+                  0: FlexColumnWidth(1), // First column (Label)
+                  1: FlexColumnWidth(2), // Second column (Value)
+                },
                 children: [
-                  Text(model.orderTitle),
-                  const SizedBox(height: 5),
-                  Wrap(
+                  TableRow(
                     children: [
-                      const Text("الوصف:",
-                          style: TextStyle(fontWeight: FontWeight.w600)),
-                      Text(model.orderDescription,
-                          maxLines: 2, overflow: TextOverflow.ellipsis),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("اسم المستخدم:",
+                            style: TextStyle(fontWeight: FontWeight.w600)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(model.orderUserName,
+                            maxLines: 1, overflow: TextOverflow.ellipsis),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  TableRow(
                     children: [
-                      const Text("رقم الطلب:",
-                          style: TextStyle(fontWeight: FontWeight.w600)),
-                      Text(model.orderId),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("الوصف:",
+                            style: TextStyle(fontWeight: FontWeight.w600)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(model.orderDescription,
+                            maxLines: 2, overflow: TextOverflow.ellipsis),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                  TableRow(
                     children: [
-                      const Text("تاريخ الطلب:",
-                          style: TextStyle(fontWeight: FontWeight.w600)),
-                      Text(getFormatDate(model.orderDate)),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("تاريخ الطلب:",
+                            style: TextStyle(fontWeight: FontWeight.w600)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(getFormatDate(model.orderDate)),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("سعر الطلب:",
-                          style: TextStyle(fontWeight: FontWeight.w600)),
-                      Text("${model.orderPrice} ${AppConstants.appCurrancy}"),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
+
+                  // Insert listOfOrderDetails into the table here
                   if ("product" != model.orderType &&
                       "service" != model.orderType)
                     ...listOfOrderDetails,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  TableRow(
                     children: [
-                      const Text("حالة الطلب:",
-                          style: TextStyle(fontWeight: FontWeight.w600)),
-                      Text(model.orderStatus),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("الخصم:",
+                            style: TextStyle(fontWeight: FontWeight.w600)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(model.orderDiscount.isEmpty
+                            ? ("0 ${AppConstants.appCurrancy}")
+                            : "${model.orderDiscount} ${AppConstants.appCurrancy}"),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  TableRow(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("المجموع:",
+                            style: TextStyle(fontWeight: FontWeight.w800)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                            "${model.orderPrice} ${AppConstants.appCurrancy}",
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w800)),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
             getCube(5, context),
+            if (!sendToPrint)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: SfBarcodeGenerator(
+                  value: widget.orderModel.orderId,
+                  symbology: QRCode(),
+                ),
+              ),
 
             // Footer message
             const Center(
@@ -309,19 +432,19 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              child: TextButton.icon(
-                onPressed: () async {
-                  await printReceipt();
-                },
-                icon: const Icon(Icons.print_outlined, color: Colors.black),
-                label: const Text(
-                  'طباعة وتنزيل الفاتورة',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
+            // SizedBox(
+            //   child: TextButton.icon(
+            //     onPressed: () async {
+            //       await printReceipt();
+            //     },
+            //     icon: const Icon(Icons.print_outlined, color: Colors.black),
+            //     label: const Text(
+            //       'طباعة وتنزيل الفاتورة',
+            //       style: TextStyle(color: Colors.black),
+            //     ),
+            //   ),
+            // ),
+            // const SizedBox(height: 20),
             Expanded(
               child: SingleChildScrollView(
                 child: saveConfirmedData(widget.orderModel, false),
@@ -347,7 +470,7 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
         await fromImageSavePDF(imageBytes);
       });
     } catch (error) {
-      showToast(error.toString(), SnackBarType.fail, context);
+      showToast("حدث خطأ: ${error.toString()}", SnackBarType.fail, context);
     } finally {
       Navigator.of(context).pop();
     }
