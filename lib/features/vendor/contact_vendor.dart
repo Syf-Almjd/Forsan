@@ -10,7 +10,8 @@ import 'package:forsan/state/navigation_cubit/navi_cubit.dart';
 import '../../data/local/local_app_data.dart';
 
 class ContactUsPage extends StatefulWidget {
-  const ContactUsPage({super.key});
+  final String? title;
+  const ContactUsPage({this.title, super.key});
 
   @override
   State<ContactUsPage> createState() => _ContactUsPageState();
@@ -50,15 +51,19 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.title == "حذف حسابي") {
+      _messageController.text =
+          "السلام عليكم ورحمة الله وبركاته\nالرجاء حذف حسابك من تطبيق فرسان \nشكرا لكم";
+    }
     return Scaffold(
-      appBar: appCustomBar("تواصل", context),
+      appBar: appCustomBar(widget.title ?? "تواصل", context),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           physics: const BouncingScrollPhysics(),
           children: [
             Text(
-              "تواصل معنا",
+              widget.title ?? "تواصل معنا",
               style: fontAlmarai(size: getWidth(10, context)),
               textAlign: TextAlign.center,
               textDirection: TextDirection.rtl,
@@ -109,7 +114,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                 onPressed: () {
                   checkUserInput();
                 },
-                buttonText: "إرسال"),
+                buttonText: widget.title ?? "إرسال"),
             const SizedBox(height: 20),
             const Divider(),
             const SizedBox(height: 10),

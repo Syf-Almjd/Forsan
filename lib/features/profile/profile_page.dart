@@ -121,8 +121,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: "حدف معلومات الخصوصية",
                   icon: Icons.privacy_tip_outlined,
                   onPress: () {
-                    NaviCubit.get(context)
-                        .navigate(context, const ContactUsPage());
+                    NaviCubit.get(context).navigate(
+                        context,
+                        const ContactUsPage(
+                          title: "حذف حسابي",
+                        ));
                   }),
               const Divider(),
               const SizedBox(height: 10),
