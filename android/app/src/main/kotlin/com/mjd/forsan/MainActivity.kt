@@ -1,4 +1,4 @@
-package com.mjd.forsan.forsan
+package com.mjd.forsan
 
 import io.flutter.embedding.android.FlutterActivity
 
