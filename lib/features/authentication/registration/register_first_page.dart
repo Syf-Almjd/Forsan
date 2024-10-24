@@ -83,9 +83,10 @@ class _RegisterFirstPageState extends State<RegisterFirstPage> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty || !value.contains('0')) {
-                      showToast("الرقم غير صحيح!", SnackBarType.fail, context);
-                      return 'غير صحيح';
-                    } else {
+                      //   showToast("الرقم غير صحيح!", SnackBarType.fail, context);
+                      //   return 'غير صحيح';
+                      // } else {
+                      phoneNumber.text = "لا يوجد رقم";
                       return null;
                     }
                   },
@@ -102,10 +103,11 @@ class _RegisterFirstPageState extends State<RegisterFirstPage> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty || value.length <= 8) {
-                      showToast(
-                          "العنوان قصير جدا!", SnackBarType.fail, context);
-                      return 'العنوان قصير جدا';
-                    } else {
+                      // showToast(
+                      //     "العنوان قصير جدا!", SnackBarType.fail, context);
+                      // return 'العنوان قصير جدا';
+                      // } else {
+                      address.text = "لا يوجد عنوان";
                       return null;
                     }
                   },

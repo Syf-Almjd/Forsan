@@ -41,7 +41,7 @@ if (keystorePropertiesFile.exists()) {
 
 
 android {
-    namespace "com.mjd.forsan"
+    namespace "com.mjd.forsan.forsan"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -60,7 +60,7 @@ android {
 
     defaultConfig {
         multiDexEnabled true
-        applicationId "com.mjd.forsan"
+        applicationId "com.mjd.forsan.forsan"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion FlutterminSdkVersion.toInteger()
