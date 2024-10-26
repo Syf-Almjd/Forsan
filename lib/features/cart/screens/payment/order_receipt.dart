@@ -401,7 +401,7 @@ class _OrderReceiptPageState extends State<OrderReceiptPage> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "forsan.print@gmail.com",
+                        "Forsan.printing@gmail.com",
                         style: TextStyle(
                           color: Colors.black54,
                           fontWeight: FontWeight.w400,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:forsan/features/shared/components.dart';
@@ -140,17 +142,29 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: "تقييم البرنامج",
                   icon: Icons.star_rate,
                   onPress: () {
-                    checkNOpenUrl(
-                        "https://play.google.com/store/apps/details?id=com.mjd.forsan.forsan",
-                        context);
+                    if (Platform.isIOS) {
+                      checkNOpenUrl(
+                          "https://apps.apple.com/us/app/%D9%81%D8%B1%D8%B3%D8%A7%D9%86-%D9%84%D9%84%D8%B7%D8%A8%D8%A7%D8%B9%D8%A9-%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%A9/id6670313698",
+                          context);
+                    } else {
+                      checkNOpenUrl(
+                          "https://play.google.com/store/apps/details?id=com.mjd.forsan.forsan",
+                          context);
+                    }
                   }),
               ProfileMenuWidget(
                   title: "مشاركة التطبيق",
                   icon: Icons.ios_share_outlined,
                   onPress: () {
-                    checkNOpenUrl(
-                        "https://play.google.com/store/apps/details?id=com.mjd.forsan.forsan",
-                        context);
+                    if (Platform.isIOS) {
+                      checkNOpenUrl(
+                          "https://apps.apple.com/us/app/%D9%81%D8%B1%D8%B3%D8%A7%D9%86-%D9%84%D9%84%D8%B7%D8%A8%D8%A7%D8%B9%D8%A9-%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%A9/id6670313698",
+                          context);
+                    } else {
+                      checkNOpenUrl(
+                          "https://play.google.com/store/apps/details?id=com.mjd.forsan.forsan",
+                          context);
+                    }
                   }),
               ProfileMenuWidget(
                   title: "تسجيل الخروج",
