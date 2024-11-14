@@ -490,33 +490,35 @@ class PrintNowPageState extends State<PrintNowScreen> {
           ? 0.00
           : 3.00; // Fixed price for all paper types
     }
+    var packageCosting = 0.0;
 
     // Add packaging options
     if (orderList.containsKey("التغليف")) {
       switch (orderList["التغليف"]) {
         case 'سلك حديد':
-          basePrice += 5.00; // Add 5.00 for iron wire
+          packageCosting += 5.00; // Add 5.00 for iron wire
           break;
         case 'سلك بلاستيك':
-          basePrice += 5.00; // Add 5.00 for plastic wire
+          packageCosting += 5.00; // Add 5.00 for plastic wire
           break;
         case 'كيس شفاف':
-          basePrice += 0.50; // Add 0.50 for transparent bag
+          packageCosting += 0.50; // Add 0.50 for transparent bag
           break;
         case 'لصق':
-          basePrice += 3.00; // Add 3.00 for tape
+          packageCosting += 3.00; // Add 3.00 for tape
           break;
         case 'تدبيس جانبي':
-          basePrice += 0.00; // No additional cost for side stapling
+          packageCosting += 0.00; // No additional cost for side stapling
           break;
         case 'تدبيس زاوية':
-          basePrice += 0.00; // No additional cost for corner stapling
+          packageCosting += 0.00; // No additional cost for corner stapling
           break;
         case 'بدون تغليف وبدون تدبيس':
-          basePrice += 0.00; // No additional cost for no packaging or stapling
+          packageCosting +=
+              0.00; // No additional cost for no packaging or stapling
           break;
         case 'التغليف الحراري':
-          basePrice += 3.00; // Add 3.00 for thermal packaging
+          packageCosting += 3.00; // Add 3.00 for thermal packaging
           break;
       }
     }
@@ -528,7 +530,7 @@ class PrintNowPageState extends State<PrintNowScreen> {
     }
 
     // Multiply by the number of papers
-    return basePrice * numberOfCopies.value;
+    return (basePrice * numberOfCopies.value) + packageCosting;
   }
 
   void startLoader() async {
