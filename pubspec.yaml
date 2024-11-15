@@ -1,7 +1,7 @@
 name: forsan
 description: A Printing Service APP.
 
-version: 1.0.10+32
+version: 1.0.20+32
 
 environment:
   sdk: '>=3.0.1 <4.0.0'
