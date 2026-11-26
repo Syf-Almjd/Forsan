@@ -5,7 +5,7 @@ import 'package:forsan/features/cart/screens/payment/order_receipt.dart';
 import 'package:forsan/features/home_screen/widgets/choose_file_widget.dart';
 import 'package:forsan/state/app_data_cubit/app_cubit.dart';
 import 'package:forsan/state/navigation_cubit/navi_cubit.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 class QRCodeScannerPage extends StatefulWidget {
   const QRCodeScannerPage({super.key});
@@ -17,10 +17,9 @@ class QRCodeScannerPage extends StatefulWidget {
 class QRCodeScannerPageState extends State<QRCodeScannerPage> {
   bool isChecked = false;
 
-  late QRViewController _controller;
-  final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
+  final MobileScannerController _controller =
+      MobileScannerController(facing: CameraFacing.back);
   String scannedData = "لا يوجد كود...";
-  CameraFacing cameraFacing = CameraFacing.back;
 
   @override
   void dispose() {
@@ -36,10 +35,9 @@ class QRCodeScannerPageState extends State<QRCodeScannerPage> {
         children: [
           Expanded(
             flex: 5,
-            child: QRView(
-              cameraFacing: cameraFacing,
-              key: _qrKey,
-              onQRViewCreated: _onQRViewCreated,
+            child: MobileScanner(
+              controller: _controller,
+              onDetect: _onDetect,
             ),
           ),
           Expanded(
@@ -56,7 +54,7 @@ class QRCodeScannerPageState extends State<QRCodeScannerPage> {
                     ),
                     onPressed: () {
                       setState(() {
-                        _controller.toggleFlash();
+                        _controller.toggleTorch();
                       });
                     },
                   ),
@@ -71,7 +69,7 @@ class QRCodeScannerPageState extends State<QRCodeScannerPage> {
                       color: Colors.black,
                     ),
                     onPressed: () {
-                      _controller.flipCamera();
+                      _controller.switchCamera();
                     },
                   ),
                 ],
@@ -84,23 +82,22 @@ class QRCodeScannerPageState extends State<QRCodeScannerPage> {
   }
 
   void toggleCamera() {
-    _controller.flipCamera();
+    _controller.switchCamera();
   }
 
-  void _onQRViewCreated(QRViewController controller) {
-    _controller = controller;
-    _controller.scannedDataStream.listen((scanData) async {
-      setState(() {
-        scannedData = scanData.code!;
-        isChecked = isChecked;
-      });
-      if (scanData.code!.isNotEmpty && isChecked == false) {
-        isChecked = true;
-        if (mounted) {
-          await checkNnavigate(context, scanData.code!);
-        }
-      }
+  Future<void> _onDetect(BarcodeCapture capture) async {
+    final code =
+        capture.barcodes.isEmpty ? null : capture.barcodes.first.rawValue;
+    if (code == null || code.isEmpty) return;
+    setState(() {
+      scannedData = code;
     });
+    if (isChecked == false) {
+      isChecked = true;
+      if (mounted) {
+        await checkNnavigate(context, code);
+      }
+    }
   }
 }
 
