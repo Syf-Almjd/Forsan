@@ -18,6 +18,15 @@ subprojects {
         if (p.hasProperty("android") && p.name != "app") {
             p.android {
                 compileSdk = 36
+                compileOptions {
+                    sourceCompatibility = JavaVersion.VERSION_17
+                    targetCompatibility = JavaVersion.VERSION_17
+                }
+            }
+            p.tasks.configureEach { t ->
+                if (t.class.name.contains("KotlinCompile") && t.hasProperty("compilerOptions")) {
+                    t.compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+                }
             }
         }
     }
