@@ -20,7 +20,8 @@ class PaymentPage extends StatefulWidget {
     applePay: ApplePayConfig(
         merchantId: 'غير متوفر مؤقتًا',
         label: 'غير متوفر مؤقتًا',
-        manual: true),
+        manual: true,
+        saveCard: false),
   );
 
   void onPaymentResult(result) {
