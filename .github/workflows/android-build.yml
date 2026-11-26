@@ -1,0 +1,44 @@
+name: Android build check
+# Runs only when started by hand or when the fix branch is pushed.
+on:
+  workflow_dispatch:
+  push:
+    branches: [fix/play-target-api-36]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter --version
+      - run: flutter pub get
+      - run: flutter build apk --debug
+      - run: flutter build appbundle --release
+      - name: Show target SDK of the release bundle manifest
+        run: grep -rh "targetSdkVersion" build/app/intermediates/merged_manifests/release || true
+      - name: Check 16 KB page alignment of native libraries (64-bit)
+        run: |
+          rm -rf /tmp/aabx && mkdir -p /tmp/aabx
+          unzip -q -o build/app/outputs/bundle/release/app-release.aab 'base/lib/arm64-v8a/*' 'base/lib/x86_64/*' -d /tmp/aabx || true
+          bad=0; n=0
+          for f in $(find /tmp/aabx -name '*.so'); do
+            n=$((n+1))
+            for x in $(readelf -lW "$f" | awk '$1=="LOAD"{print $NF}' | sort -u); do
+              if [ $((x)) -lt 16384 ]; then echo "NOT 16KB aligned: $f align=$x"; bad=1; fi
+            done
+          done
+          echo "native libs checked: $n, misaligned: $bad"
+          [ "$n" -gt 0 ] && [ "$bad" -eq 0 ]
+      - uses: actions/upload-artifact@v4
+        with:
+          name: forsan-build-check
+          path: |
+            build/app/outputs/flutter-apk/app-debug.apk
+            build/app/outputs/bundle/release/app-release.aab
